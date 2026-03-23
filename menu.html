@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodelicious - Restaurant Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Menu Page Specific Styles */
+        .restaurant-header {
+            background: linear-gradient(135deg, #fff5e8, #fefaf5);
+            padding: 40px 0;
+            border-bottom: 1px solid #f0e4d8;
+        }
+
+        .restaurant-info {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .restaurant-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .restaurant-details h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-details p {
+            color: #6b5e52;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .restaurant-meta span {
+            background: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Menu Section */
+        .menu-section {
+            padding: 40px 0 60px;
+        }
+
+        .menu-category {
+            margin-bottom: 40px;
+        }
+
+        .menu-category h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0e4d8;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .menu-item-info {
+            flex: 1;
+        }
+
+        .menu-item-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .veg-badge, .nonveg-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .veg-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .nonveg-badge {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .menu-item-desc {
+            font-size: 0.85rem;
+            color: #9b8a7a;
+            margin-bottom: 5px;
+        }
+
+        .menu-item-price {
+            font-weight: 600;
+            color: #d95c2b;
+            font-size: 1.1rem;
+        }
+
+        .menu-item-actions {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            justify-content: flex-end;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #e0d4c8;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .qty-btn:hover {
+            background: #f5efe8;
+        }
+
+        .item-quantity {
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .add-btn {
+            background: #d95c2b;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .add-btn:hover {
+            background: #b8471c;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #f0e4d8;
+        }
+
+        .cart-header button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0e4d8;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            font-size: 0.85rem;
+            color: #d95c2b;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-qty-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #e0d4c8;
+            background: white;
+            cursor: pointer;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #f0e4d8;
+        }
+
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #d95c2b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .checkout-btn:hover {
+            background: #b8471c;
+        }
+
+        .cart-icon {
+            cursor: pointer;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #d95c2b;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .restaurant-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            .menu-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .menu-item-actions {
+                margin-top: 10px;
+            }
+            .quantity-control {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">🍛 foodelicious</a>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="restaurants.html">Restaurants</a></li>
+                    <li><a href="#" id="cartIcon" class="cart-icon">Cart (<span id="cartCount">0</span>)</a></li>
+                </ul>
+            </nav>
+            <a href="restaurants.html" class="btn-order">Back to Restaurants</a>
+        </div>
+    </header>
+
+    <!-- RESTAURANT HEADER -->
+    <section class="restaurant-header" id="restaurantHeader">
+        <div class="container">
+            <a href="restaurants.html" class="back-link">← Back to Restaurants</a>
+            <div class="restaurant-info" id="restaurantInfo">
+                <!-- Restaurant info will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MENU SECTION -->
+    <section class="menu-section">
+        <div class="container">
+            <div id="menuContainer">
+                <!-- Menu will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button id="closeCart">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: #9b8a7a;">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: ₹<span id="cartTotal">0</span></div>
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // ========== MENU DATA (Restaurant ID wise) ==========
+        const menuData = {
+            // Sharma Ji Ki Kachori (id: 1)
+            1: {
+                name: "Sharma Ji Ki Kachori",
+                image: "https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop",
+                cuisine: "Street Food",
+                rating: 4.5,
+                location: "Old Delhi, Near Chandni Chowk",
+                deliveryTime: "25-35 min",
+                menu: [
+                    { id: 101, name: "Pyaaz Kachori", price: 25, veg: true, description: "Crispy kachori with onion filling", category: "Kachori" },
+                    { id: 102, name: "Dal Kachori", price: 30, veg: true, description: "Stuffed with spicy dal", category: "Kachori" },
+                    { id: 103, name: "Samosa", price: 20, veg: true, description: "Crispy samosa with aloo filling", category: "Snacks" },
+                    { id: 104, name: "Jalebi", price: 30, veg: true, description: "4 pieces, crispy & sweet", category: "Sweets" },
+                    { id: 105, name: "Aloo Sabzi Plate", price: 40, veg: true, description: "Served with puri", category: "Main Course" }
+                ]
+            },
+            // Bombay Chaiwala (id: 2)
+            2: {
+                name: "Bombay Chaiwala",
+                image: "https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop",
+                cuisine: "Cafe • Street Food",
+                rating: 4.3,
+                location: "Connaught Place",
+                deliveryTime: "20-30 min",
+                menu: [
+                    { id: 201, name: "Cutting Chai", price: 15, veg: true, description: "Strong masala chai", category: "Beverages" },
+                    { id: 202, name: "Vada Pav", price: 30, veg: true, description: "Mumbai style vada pav", category: "Snacks" },
+                    { id: 203, name: "Bun Maska", price: 25, veg: true, description: "Buttered bun with chai", category: "Snacks" },
+                    { id: 204, name: "Samosa Pav", price: 35, veg: true, description: "Samosa with pav", category: "Snacks" },
+                    { id: 205, name: "Poha", price: 40, veg: true, description: "Indori style poha", category: "Breakfast" }
+                ]
+            },
+            // Amritsari Kulcha Hut (id: 7)
+            7: {
+                name: "Amritsari Kulcha Hut",
+                image: "https://images.unsplash.com/photo-1597223557154-721c1cecc4bc?w=400&h=250&fit=crop",
+                cuisine: "Punjabi • Kulcha",
+                rating: 4.6,
+                location: "Rajouri Garden",
+                deliveryTime: "30-40 min",
+                menu: [
+                    { id: 701, name: "Aloo Kulcha", price: 50, veg: true, description: "Stuffed with spicy aloo", category: "Kulcha" },
+                    { id: 702, name: "Paneer Kulcha", price: 70, veg: true, description: "Stuffed with paneer", category: "Kulcha" },
+                    { id: 703, name: "Chole Kulcha", price: 80, veg: true, description: "Kulcha with chole", category: "Combo" },
+                    { id: 704, name: "Lassi", price: 40, veg: true, description: "Sweet/salted lassi", category: "Beverages" },
+                    { id: 705, name: "Chole Bhature", price: 90, veg: true, description: "2 bhature with chole", category: "Main Course" }
+                ]
+            },
+            // Biryani Baigan (id: 8)
+            8: {
+                name: "Biryani Baigan",
+                image: "https://images.unsplash.com/photo-1563379091339-03b21a4c7e77?w=400&h=250&fit=crop",
+                cuisine: "Mughlai • Biryani",
+                rating: 4.7,
+                location: "Jamia Nagar",
+                deliveryTime: "35-45 min",
+                menu: [
+                    { id: 801, name: "Chicken Biryani", price: 150, veg: false, description: "Hyderabadi style", category: "Biryani" },
+                    { id: 802, name: "Mutton Biryani", price: 220, veg: false, description: "Slow cooked", category: "Biryani" },
+                    { id: 803, name: "Veg Biryani", price: 100, veg: true, description: "With vegetables", category: "Biryani" },
+                    { id: 804, name: "Raita", price: 20, veg: true, description: "Bowl of raita", category: "Sides" },
+                    { id: 805, name: "Kebabs (4 pcs)", price: 120, veg: false, description: "Seekh kebab", category: "Starters" }
+                ]
+            },
+            // Madhuram Sweets (id: 13)
+            13: {
+                name: "Madhuram Sweets",
+                image: "https://images.unsplash.com/photo-1589301760014-2c6fc4f4c8f6?w=400&h=250&fit=crop",
+                cuisine: "South Indian • Sweets",
+                rating: 4.4,
+                location: "Lajpat Nagar",
+                deliveryTime: "25-35 min",
+                menu: [
+                    { id: 1301, name: "Masala Dosa", price: 70, veg: true, description: "Crispy dosa with potato filling", category: "South Indian" },
+                    { id: 1302, name: "Idli (2 pcs)", price: 35, veg: true, description: "Soft idli with sambhar", category: "South Indian" },
+                    { id: 1303, name: "Medu Vada", price: 40, veg: true, description: "2 pieces with chutney", category: "South Indian" },
+                    { id: 1304, name: "Gulab Jamun", price: 30, veg: true, description: "2 pieces", category: "Sweets" },
+                    { id: 1305, name: "Mysore Pak", price: 40, veg: true, description: "Traditional sweet", category: "Sweets" }
+                ]
+            },
+            // Momos Point (id: 17)
+            17: {
+                name: "Momos Point",
+                image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=250&fit=crop",
+                cuisine: "Chinese • Tibetan",
+                rating: 4.5,
+                location: "Hauz Khas",
+                deliveryTime: "20-30 min",
+                menu: [
+                    { id: 1701, name: "Steamed Veg Momos", price: 50, veg: true, description: "6 pieces", category: "Momos" },
+                    { id: 1702, name: "Steamed Chicken Momos", price: 70, veg: false, description: "6 pieces", category: "Momos" },
+                    { id: 1703, name: "Fried Veg Momos", price: 60, veg: true, description: "6 pieces", category: "Momos" },
+                    { id: 1704, name: "Tandoori Momos", price: 90, veg: false, description: "6 pieces", category: "Momos" },
+                    { id: 1705, name: "Thukpa", price: 80, veg: true, description: "Noodle soup", category: "Soup" }
+                ]
+            },
+            // Gangaram Chaat Bhandar (id: 3)
+            3: {
+                name: "Gangaram Chaat Bhandar",
+                image: "https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop",
+                cuisine: "Street Food • Chaat",
+                rating: 4.8,
+                location: "Chandni Chowk",
+                deliveryTime: "30-40 min",
+                menu: [
+                    { id: 301, name: "Aloo Tikki", price: 40, veg: true, description: "Crispy tikki with chutney", category: "Chaat" },
+                    { id: 302, name: "Papdi Chaat", price: 50, veg: true, description: "Sweet & spicy chaat", category: "Chaat" },
+                    { id: 303, name: "Dahi Bhalla", price: 50, veg: true, description: "Soft bhalla with curd", category: "Chaat" },
+                    { id: 304, name: "Gol Gappe", price: 30, veg: true, description: "6 pieces", category: "Chaat" },
+                    { id: 305, name: "Raj Kachori", price: 80, veg: true, description: "Large crispy kachori", category: "Chaat" }
+                ]
+            }
+        };
+
+        // Get restaurant ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const restaurantId = parseInt(urlParams.get('id'));
+
+        // Get restaurant data
+        const restaurant = menuData[restaurantId];
+
+        // If restaurant not found
+        if (!restaurant) {
+            document.getElementById('restaurantInfo').innerHTML = '<h2>Restaurant not found</h2>';
+            document.getElementById('menuContainer').innerHTML = '<p>Sorry, this restaurant is not available.</p>';
+        } else {
+            // Display restaurant info
+            document.getElementById('restaurantInfo').innerHTML = `
+                <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-img">
+                <div class="restaurant-details">
+                    <h1>${restaurant.name}</h1>
+                    <p>${restaurant.cuisine}</p>
+                    <div class="restaurant-meta">
+                        <span>★ ${restaurant.rating}</span>
+                        <span>📍 ${restaurant.location}</span>
+                        <span>🚚 ${restaurant.deliveryTime}</span>
+                    </div>
+                </div>
+            `;
+
+            // Group menu by category
+            const menuByCategory = {};
+            restaurant.menu.forEach(item => {
+                if (!menuByCategory[item.category]) {
+                    menuByCategory[item.category] = [];
+                }
+                menuByCategory[item.category].push(item);
+            });
+
+            // Display menu
+            let menuHtml = '';
+            for (const [category, items] of Object.entries(menuByCategory)) {
+                menuHtml += `
+                    <div class="menu-category">
+                        <h2>${category}</h2>
+                        <div class="menu-items">
+                            ${items.map(item => `
+                                <div class="menu-item" data-item-id="${item.id}">
+                                    <div class="menu-item-info">
+                                        <div class="menu-item-name">
+                                            ${item.name}
+                                            <span class="${item.veg ? 'veg-badge' : 'nonveg-badge'}">${item.veg ? '🌱 Veg' : '🍗 Non-Veg'}</span>
+                                        </div>
+                                        <div class="menu-item-desc">${item.description}</div>
+                                        <div class="menu-item-price">₹${item.price}</div>
+                                    </div>
+                                    <div class="menu-item-actions">
+                                        <div class="quantity-control">
+                                            <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                            <span class="item-quantity" id="qty-${item.id}">0</span>
+                                            <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                                        </div>
+                                        <button class="add-btn" onclick="addToCartFromMenu(${item.id}, '${item.name}', ${item.price}, ${item.veg})">Add to Cart</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('menuContainer').innerHTML = menuHtml;
+        }
+
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let itemQuantities = {};
+
+        // Initialize quantities from cart
+        cart.forEach(item => {
+            itemQuantities[item.id] = item.quantity;
+        });
+
+        function updateQuantity(itemId, change) {
+            const currentQty = itemQuantities[itemId] || 0;
+            const newQty = Math.max(0, currentQty + change);
+            itemQuantities[itemId] = newQty;
+            const qtyElement = document.getElementById(`qty-${itemId}`);
+            if (qtyElement) {
+                qtyElement.textContent = newQty;
+            }
+        }
+
+        window.updateQuantity = updateQuantity;
+
+        window.addToCartFromMenu = function(id, name, price, veg) {
+            const quantity = itemQuantities[id] || 0;
+            if (quantity === 0) {
+                alert('Please select quantity first!');
+                return;
+            }
+            
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ id, name, price, veg, quantity });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            itemQuantities[id] = 0;
+            const qtyElement = document.getElementById(`qty-${id}`);
+            if (qtyElement) {
+                qtyElement.textContent = '0';
+            }
+            updateCartCount();
+            updateCartDisplay();
+            alert(`${quantity} x ${name} added to cart!`);
+        };
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = totalItems;
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartTotalSpan = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p style="text-align: center; color: #9b8a7a;">Your cart is empty</p>';
+                cartTotalSpan.textContent = '0';
+                return;
+            }
+            
+            let total = 0;
+            cartItemsDiv.innerHTML = cart.map(item => {
+                total += item.price * item.quantity;
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h4>${item.name} <span class="${item.veg ? 'veg-badge' : 'nonveg-badge'}">${item.veg ? 'Veg' : 'Non-Veg'}</span></h4>
+                            <div class="cart-item-price">₹${item.price} x ${item.quantity}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="cart-qty-btn" onclick="updateCartItem(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="cart-qty-btn" onclick="updateCartItem(${item.id}, 1)">+</button>
+                            <button class="cart-qty-btn" onclick="removeCartItem(${item.id})" style="color: #c62828;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            cartTotalSpan.textContent = total;
+        }
+
+        window.updateCartItem = function(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                updateCartDisplay();
+            }
+        };
+
+        window.removeCartItem = function(id) {
+            cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            updateCartDisplay();
+        };
+
+        // Cart sidebar
+        const cartSidebar = document.getElementById('cartSidebar');
+        const cartIcon = document.getElementById('cartIcon');
+        const closeCart = document.getElementById('closeCart');
+
+        cartIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            updateCartDisplay();
+            cartSidebar.classList.add('open');
+        });
+
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.remove('open');
+        });
+
+        // Checkout
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+            } else {
+                alert('Order placed successfully! 🎉\nTotal: ₹' + document.getElementById('cartTotal').textContent);
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                updateCartDisplay();
+                cartSidebar.classList.remove('open');
+            }
+        });
+
+        updateCartCount();
+    </script>
+</body>
+</html>
