@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodelicious - Restaurants Near You</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">🍛 foodelicious</a>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="restaurants.html" class="active">Restaurants</a></li>
+                    <li><a href="#" id="cartLink">Cart (<span id="cartCount">0</span>)</a></li>
+                </ul>
+            </nav>
+            <a href="restaurants.html" class="btn-order">Order Now</a>
+        </div>
+    </header>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>🍽️ Restaurants Near You</h1>
+            <p>Discover the best local food spots in your area</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by restaurant name or dish...">
+                <button id="searchBtn">🔍 Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FILTER BUTTONS ========== -->
+    <section class="filters">
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="street-food">Street Food</button>
+                <button class="filter-btn" data-filter="punjabi">Punjabi</button>
+                <button class="filter-btn" data-filter="south-indian">South Indian</button>
+                <button class="filter-btn" data-filter="chinese">Chinese</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== RESTAURANTS GRID ========== -->
+    <section class="restaurants-section">
+        <div class="container">
+            <div class="restaurants-grid" id="restaurantsGrid">
+                <!-- Restaurants will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <h4>foodelicious</h4>
+                <p>Supporting small businesses & local flavors since 2024</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="restaurants.html">Restaurants</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p>📧 support@foodelicious.com</p>
+                <p>📞 +91 98765 43210</p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>© 2024 Foodelicious. Made with ❤️ for local food lovers.</p>
+        </div>
+    </footer>
+
+    <script src="restaurants.js"></script>
+</body>
+</html>
