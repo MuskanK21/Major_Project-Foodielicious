@@ -1,205 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>foodielicious · indian flavours</title>
-  <!-- separate CSS file (linked below) — exactly as requested -->
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodelicious - Authentic Indian Food Delivery</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- minimalist header with subtle brand -->
-  <header class="site-header">
-    <div class="container header-container">
-      <a href="#" class="logo">foodielicious</a>
-      <nav class="main-nav" aria-label="main navigation">
-        <ul>
-          <li><a href="#">menu</a></li>
-        </ul>
-      </nav>
-      <a href="#" class="nav-order">order</a>
-    </div>
-  </header>
+    <!-- HEADER -->
+    <header style="background: #fefaf5; padding: 16px 0; border-bottom: 1px solid #f0e4d8;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <a href="index.html" style="font-size: 1.6rem; font-weight: 500; text-decoration: none; color: #d95c2b;">🍛 foodelicious</a>
+            <nav>
+                <ul style="display: flex; gap: 28px; list-style: none;">
+                    <li><a href="index.html" style="text-decoration: none; color: #4a4a4a;">Home</a></li>
+                    <li><a href="restaurants.html" style="text-decoration: none; color: #4a4a4a;">Restaurants</a></li>
+                    <li><a href="#" id="cartLink" style="text-decoration: none; color: #4a4a4a;">Cart (<span id="cartCount">0</span>)</a></li>
+                </ul>
+            </nav>
+            <a href="restaurants.html" style="border: 1.5px solid #d95c2b; padding: 8px 24px; border-radius: 40px; text-decoration: none; color: #d95c2b;">Order Now</a>
+        </div>
+    </header>
 
-  <main>
-    <!-- hero section – with Indian food image -->
-    <section class="hero">
-      <div class="container hero-container">
-        <div class="hero-text">
-          <h1>authentic indian ·<br>delivered to your home</h1>
-          <p>experience the rich flavours of India — from creamy curries to sizzling tandoori, all made with traditional spices and love.</p>
-          <a href="#" class="cta-button">explore menu →</a>
+    <!-- HERO SECTION -->
+    <section style="padding: 60px 0 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 50px; flex-wrap: wrap;">
+            <div style="flex: 1;">
+                <h1 style="font-size: 3rem; font-weight: 500; line-height: 1.2; margin-bottom: 20px; color: #2c2c2c;">Authentic <span style="color: #d95c2b;">Indian Food</span><br>Delivered to Your Doorstep</h1>
+                <p style="font-size: 1.1rem; color: #6b5e52; margin-bottom: 30px;">Experience the rich flavours of India – from creamy curries to sizzling tandoori, all made with traditional spices and love. Supporting local small businesses!</p>
+                <a href="restaurants.html" style="display: inline-block; background: #d95c2b; color: white; padding: 12px 32px; border-radius: 40px; text-decoration: none;">Explore Restaurants →</a>
+            </div>
+            <div style="flex: 1;">
+                <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&h=400&fit=crop" style="width: 100%; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; object-fit: cover;">
+            </div>
         </div>
-        <div class="hero-visual">
-          <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop" alt="Indian thali with various dishes" class="hero-image">
-        </div>
-      </div>
     </section>
 
-    <!-- Indian food collection – 7 cards with Indian prices -->
-    <section class="collection">
-      <div class="container">
-        <h2 class="section-title">popular indian dishes</h2>
-        <div class="collection-grid grid-7">
-          <!-- Card 1: Butter Chicken -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&auto=format&fit=crop" alt="Butter chicken in creamy tomato gravy" class="food-image">
+    <!-- FEATURES SECTION -->
+    <section style="padding: 60px 0; background: white;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="text-align: center; font-size: 2rem; font-weight: 450; margin-bottom: 40px;">Why Choose Foodelicious?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+                <div style="text-align: center; padding: 30px 20px; background: #fefaf5; border-radius: 20px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🏪</div>
+                    <h3 style="margin-bottom: 10px;">Local Restaurants</h3>
+                    <p style="color: #6b5e52;">Support small businesses & street food vendors near you</p>
+                </div>
+                <div style="text-align: center; padding: 30px 20px; background: #fefaf5; border-radius: 20px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">💰</div>
+                    <h3 style="margin-bottom: 10px;">Low Commission</h3>
+                    <p style="color: #6b5e52;">Only 5-10% commission — fair for local vendors</p>
+                </div>
+                <div style="text-align: center; padding: 30px 20px; background: #fefaf5; border-radius: 20px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🚚</div>
+                    <h3 style="margin-bottom: 10px;">Real-Time Tracking</h3>
+                    <p style="color: #6b5e52;">Track your order live from kitchen to doorstep</p>
+                </div>
+                <div style="text-align: center; padding: 30px 20px; background: #fefaf5; border-radius: 20px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🗣️</div>
+                    <h3 style="margin-bottom: 10px;">हिंदी Support</h3>
+                    <p style="color: #6b5e52;">Available in Hindi & English for easy use</p>
+                </div>
             </div>
-            <div class="card-content">
-              <h3>butter chicken</h3>
-              <p>creamy tomato gravy · tender chicken · aromatic spices</p>
-              <span class="price">349</span>
-            </div>
-          </article>
-          
-          <!-- Card 2: Biryani -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&auto=format&fit=crop" alt="Hyderabadi biryani with raita" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>hyderabadi biryani</h3>
-              <p>fragrant basmati · spiced meat · saffron · fried onions</p>
-              <span class="price">399</span>
-            </div>
-          </article>
-          
-          <!-- Card 3: Paneer Tikka -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src=https://spicecravings.com/wp-content/uploads/2020/10/Paneer-Tikka-Featured-1.jpg" alt="Grilled paneer tikka with veggies" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>paneer tikka</h3>
-              <p>cottage cheese · bell peppers · tandoori masala</p>
-              <span class="price">279</span>
-            </div>
-          </article>
-          
-          <!-- Card 4: Dal Makhani -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&auto=format&fit=crop" alt="Creamy dal makhani with cream" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>dal makhani</h3>
-              <p>black lentils · kidney beans · butter · cream</p>
-              <span class="price">249</span>
-            </div>
-          </article>
-          
-          <!-- Card 5: Rogan Josh -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Rogan_Josh_Kashmiri.jpg/330px-Rogan_Josh_Kashmiri.jpg" alt="Kashmiri rogan josh with gravy" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>rogan josh</h3>
-              <p>slow-cooked lamb · kashmiri spices · yogurt gravy</p>
-              <span class="price">449</span>
-            </div>
-          </article>
-          
-          <!-- Card 6: Chole Bhature -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4oOfFsg5nLHeeL1EU_QJfVJMjItoK4_KEQw&s" alt="Chole bhature with pickled onions" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>chole bhature</h3>
-              <p>spiced chickpeas · fried bread · pickled onions</p>
-              <span class="price">231</span>
-            </div>
-          </article>
-          
-          <!-- Card 7: Masala Dosa -->
-          <article class="food-card">
-            <div class="card-media">
-              <img src="https://images.unsplash.com/photo-1630383249896-424e482df921?w=600&auto=format&fit=crop" alt="Crispy masala dosa with chutney" class="food-image">
-            </div>
-            <div class="card-content">
-              <h3>masala dosa</h3>
-              <p>crispy rice crepe · spiced potato · coconut chutney</p>
-              <span class="price">179</span>
-            </div>
-          </article>
         </div>
-        <div class="collection-link">
-          <a href="#" class="subtle-link">view all 25+ dishes →</a>
-        </div>
-      </div>
     </section>
 
-    <!-- Indian spice ethos -->
-    <section class="ethos">
-      <div class="container ethos-container">
-        <div class="ethos-content">
-          <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200&auto=format&fit=crop" alt="Indian spices" class="ethos-image">
-          <p class="ethos-quiet">authentic spices · family recipes · always fresh<span class="separator">✻</span>since 2018</p>
+    <!-- POPULAR DISHES -->
+    <section style="padding: 60px 0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <h2 style="text-align: center; font-size: 2rem; font-weight: 450; margin-bottom: 40px;">Popular Indian Dishes</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <img src="https://images.unsplash.com/photo-1589301760014-2c6fc4f4c8f6?w=300&h=200&fit=crop" style="width: 100%; height: 180px; object-fit: cover;">
+                    <h3 style="margin: 12px 16px 5px;">Masala Dosa</h3>
+                    <p style="margin: 0 16px 10px; color: #6b5e52;">Crispy dosa with potato filling</p>
+                    <span style="display: block; margin: 0 16px 16px; color: #d95c2b; font-weight: 600;">₹70</span>
+                </div>
+                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <img src="https://images.unsplash.com/photo-1597223557154-721c1cecc4bc?w=300&h=200&fit=crop" style="width: 100%; height: 180px; object-fit: cover;">
+                    <h3 style="margin: 12px 16px 5px;">Amritsari Kulcha</h3>
+                    <p style="margin: 0 16px 10px; color: #6b5e52;">Stuffed kulcha with spicy chole</p>
+                    <span style="display: block; margin: 0 16px 16px; color: #d95c2b; font-weight: 600;">₹80</span>
+                </div>
+                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21a4c7e77?w=300&h=200&fit=crop" style="width: 100%; height: 180px; object-fit: cover;">
+                    <h3 style="margin: 12px 16px 5px;">Hyderabadi Biryani</h3>
+                    <p style="margin: 0 16px 10px; color: #6b5e52;">Aromatic rice with spices & meat</p>
+                    <span style="display: block; margin: 0 16px 16px; color: #d95c2b; font-weight: 600;">₹150</span>
+                </div>
+                <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <img src="https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=300&h=200&fit=crop" style="width: 100%; height: 180px; object-fit: cover;">
+                    <h3 style="margin: 12px 16px 5px;">Pyaaz Kachori</h3>
+                    <p style="margin: 0 16px 10px; color: #6b5e52;">Crispy, spicy & delicious</p>
+                    <span style="display: block; margin: 0 16px 16px; color: #d95c2b; font-weight: 600;">₹25</span>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- how to order feature -->
-    <section class="order-feature">
-      <div class="container feature-container">
-        <div class="feature-text">
-          <h2>order in three simple steps</h2>
-          <ol class="steps-list">
-            <li><span class="step-marker">01</span> choose your favourite indian dish</li>
-            <li><span class="step-marker">02</span> select spice level (mild to extra hot)</li>
-            <li><span class="step-marker">03</span> relax while we prepare & deliver</li>
-          </ol>
-          <a href="#" class="cta-button ghost">start your order</a>
+    <!-- FOOTER -->
+    <footer style="background: #f5efe8; padding: 50px 0 20px; margin-top: 40px;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px;">
+            <div>
+                <h4 style="color: #d95c2b; margin-bottom: 16px;">foodelicious</h4>
+                <p style="color: #6b5e52;">Supporting small businesses & local flavors since 2024</p>
+            </div>
+            <div>
+                <h4 style="color: #d95c2b; margin-bottom: 16px;">Quick Links</h4>
+                <ul style="list-style: none;">
+                    <li><a href="index.html" style="text-decoration: none; color: #6b5e52;">Home</a></li>
+                    <li><a href="restaurants.html" style="text-decoration: none; color: #6b5e52;">Restaurants</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #d95c2b; margin-bottom: 16px;">Contact</h4>
+                <p style="color: #6b5e52;">📧 support@foodelicious.com</p>
+                <p style="color: #6b5e52;">📞 +91 98765 43210</p>
+            </div>
         </div>
-        <div class="feature-visual">
-          <img src="https://images.unsplash.com/photo-1517244683847-7456b63c5969?w=600&auto=format&fit=crop" alt="Indian kitchen with spices" class="feature-image">
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0d4c8; font-size: 0.8rem; color: #9b8a7a;">
+            <p>© 2024 Foodelicious. Made with ❤️ for local food lovers.</p>
         </div>
-      </div>
-    </section>
+    </footer>
 
-    <!-- newsletter with Indian touch -->
-    <aside class="newsletter">
-      <div class="container newsletter-container">
-        <div class="newsletter-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?w=100&auto=format&fit=crop" alt="Indian tea" class="newsletter-image">
-        </div>
-        <p class="newsletter-prompt">get updates on new indian dishes & offers</p>
-        <form class="minimal-form">
-          <input type="email" placeholder="your email" id="email-input" name="email">
-          <button type="submit" aria-label="subscribe">→</button>
-        </form>
-      </div>
-    </aside>
-  </main>
-
-  <!-- footer -->
-  <footer class="site-footer">
-    <div class="container footer-container">
-      <div class="footer-col">
-        <a href="#" class="footer-logo">foodielicious</a>
-        <p class="footer-address">no. 42, koramangala<br> · bengaluru / mumbai · </p>
-        <img src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=50&auto=format&fit=crop" alt="Indian spice icon" class="footer-icon">
-      </div>
-      <div class="footer-col">
-        <ul class="footer-links">
-          <li><a href="#">accessibility</a></li>
-          <li><a href="#">privacy</a></li>
-          <li><a href="#">contact</a></li>
-          <li><a href="#">faq</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <ul class="footer-social">
-          <li><a href="#" aria-label="instagram">ig</a></li>
-          <li><a href="#" aria-label="pinterest">pt</a></li>
-          <li><a href="#" aria-label="x">x</a></li>
-        </ul>
-        <p class="tiny-credit">© 2025 foodielicious</p>
-      </div>
-    </div>
-  </footer>
+    <script src="script.js"></script>
 </body>
 </html>
