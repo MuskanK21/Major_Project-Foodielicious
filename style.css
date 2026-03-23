@@ -61,11 +61,6 @@ body {
     color: #d95c2b;
 }
 
-.nav a.active {
-    color: #d95c2b;
-    font-weight: 500;
-}
-
 .btn-order {
     border: 1.5px solid #d95c2b;
     padding: 8px 24px;
@@ -81,7 +76,7 @@ body {
     color: white;
 }
 
-/* ========== HERO SECTION (Landing Page) ========== */
+/* ========== HERO SECTION ========== */
 .hero {
     padding: 60px 0 40px;
 }
@@ -238,7 +233,85 @@ body {
     font-size: 1.1rem;
 }
 
-/* ========== PAGE HERO (Restaurants Page) ========== */
+/* ========== FOOTER ========== */
+.footer {
+    background: #f5efe8;
+    padding: 50px 0 20px;
+    margin-top: 40px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.footer-col h4 {
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: #d95c2b;
+}
+
+.footer-col p {
+    color: #6b5e52;
+    font-size: 0.9rem;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col li {
+    margin-bottom: 8px;
+}
+
+.footer-col a {
+    text-decoration: none;
+    color: #6b5e52;
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: #d95c2b;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0d4c8;
+    font-size: 0.8rem;
+    color: #9b8a7a;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .header-container {
+        flex-direction: column;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+}
+/* ========== RESTAURANTS PAGE STYLES ========== */
+
+/* Active nav link */
+.nav a.active {
+    color: #d95c2b;
+    font-weight: 500;
+}
+
+/* Page Hero */
 .page-hero {
     background: linear-gradient(135deg, #fff5e8 0%, #fefaf5 100%);
     padding: 60px 0 40px;
@@ -295,7 +368,7 @@ body {
     background: #b8471c;
 }
 
-/* ========== FILTERS ========== */
+/* Filters */
 .filters {
     padding: 20px 0;
     border-bottom: 1px solid #f0e4d8;
@@ -326,7 +399,7 @@ body {
     color: white;
 }
 
-/* ========== RESTAURANTS GRID ========== */
+/* Restaurants Grid */
 .restaurants-section {
     padding: 40px 0 60px;
 }
@@ -349,7 +422,7 @@ body {
     }
 }
 
-/* ========== RESTAURANT CARD ========== */
+/* Restaurant Card */
 .restro-card {
     background: white;
     border-radius: 20px;
@@ -424,86 +497,11 @@ body {
     border-top: 1px solid #f0e4d8;
 }
 
-/* ========== NO RESULTS ========== */
+/* No Results */
 .no-results {
     text-align: center;
     padding: 60px;
     grid-column: 1 / -1;
     color: #9b8a7a;
     font-size: 1.1rem;
-}
-
-/* ========== FOOTER ========== */
-.footer {
-    background: #f5efe8;
-    padding: 50px 0 20px;
-    margin-top: 40px;
-}
-
-.footer-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-}
-
-.footer-col h4 {
-    font-weight: 500;
-    margin-bottom: 16px;
-    color: #d95c2b;
-}
-
-.footer-col p {
-    color: #6b5e52;
-    font-size: 0.9rem;
-}
-
-.footer-col ul {
-    list-style: none;
-}
-
-.footer-col li {
-    margin-bottom: 8px;
-}
-
-.footer-col a {
-    text-decoration: none;
-    color: #6b5e52;
-    transition: color 0.2s;
-}
-
-.footer-col a:hover {
-    color: #d95c2b;
-}
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #e0d4c8;
-    font-size: 0.8rem;
-    color: #9b8a7a;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 768px) {
-    .hero-container {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    
-    .header-container {
-        flex-direction: column;
-    }
-    
-    .section-title {
-        font-size: 1.6rem;
-    }
-    
-    .page-hero h1 {
-        font-size: 1.8rem;
-    }
 }
