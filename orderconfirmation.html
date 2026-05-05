@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Foodelicious</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">🍜 Foodelicious</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="restaurants.html">Restaurants</a></li>
+                    <li><a href="cart.html">Cart (<span id="cartCount">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="confirmation-section">
+            <div class="container">
+                <div class="confirmation-card">
+                    <div class="success-icon">✅</div>
+                    <h1>Order Placed Successfully!</h1>
+                    <p class="order-id" id="orderId">Order #ORD123456</p>
+                    
+                    <div class="delivery-info">
+                        <h3>🚚 Delivery Details</h3>
+                        <p>Estimated Delivery Time: <strong id="deliveryTime">30-40 minutes</strong></p>
+                        <p>Delivery Partner: <strong>Foodelicious Express</strong></p>
+                    </div>
+
+                    <div class="order-items">
+                        <h3>📋 Order Summary</h3>
+                        <div id="orderItemsList"></div>
+                    </div>
+
+                    <div class="order-total">
+                        <h3>💰 Payment Summary</h3>
+                        <div id="paymentSummary"></div>
+                    </div>
+
+                    <div class="confirmation-actions">
+                        <a href="order-history.html" class="btn-primary">View Order History</a>
+                        <a href="restaurants.html" class="btn-secondary">Order Again</a>
+                        <button onclick="downloadInvoice()" class="btn-outline">📄 Download Invoice</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Foodelicious | Taste the Authentic India</p>
+        </div>
+    </footer>
+
+    <script src="order-confirmation.js"></script>
+</body>
+</html>
