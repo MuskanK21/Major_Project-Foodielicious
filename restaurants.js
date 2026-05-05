@@ -348,18 +348,278 @@ filterBtns.forEach(btn => {
     });
 });
 
-// ========== CART FUNCTIONALITY ==========
+// ========== CART FUNCTIONS (Complete) ==========
+
+// Get cart from localStorage
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+// Save cart to localStorage
+function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+}
+
+// Update cart count in header
 function updateCartCount() {
-    const cartCount = document.getElementById('cartCount');
-    if (cartCount) {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
+    const cartCountElements = document.querySelectorAll('#cartCount');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountElements.forEach(el => {
+        if (el) el.textContent = totalItems;
+    });
+}
+
+// Add item to cart
+function addToCart(restaurant) {
+    const existing = cart.find(item => item.id === restaurant.id);
+    
+    if (existing) {
+        existing.quantity++;
+        showToast(`${restaurant.name} quantity increased to ${existing.quantity}`);
+    } else {
+        cart.push({ 
+            id: restaurant.id,
+            name: restaurant.name,
+            price: restaurant.price,
+            quantity: 1,
+            image: restaurant.image,
+            location: restaurant.location,
+            deliveryFee: restaurant.deliveryFee,
+            deliveryTime: restaurant.deliveryTime
+        });
+        showToast(`${restaurant.name} added to cart! 🎉`);
+    }
+    
+    saveCart();
+}
+
+// Remove item completely from cart
+function removeFromCart(id) {
+    const item = cart.find(i => i.id === id);
+    if (item) {
+        cart = cart.filter(item => item.id !== id);
+        saveCart();
+        showToast(`${item.name} removed from cart`);
+        if (window.location.pathname.includes('cart.html')) {
+            displayCartItems();
+        }
     }
 }
 
-updateCartCount();
+// Update quantity (increase/decrease)
+function updateQuantity(id, change) {
+    const itemIndex = cart.findIndex(i => i.id === id);
+    
+    if (itemIndex !== -1) {
+        const newQuantity = cart[itemIndex].quantity + change;
+        
+        if (newQuantity <= 0) {
+            removeFromCart(id);
+        } else {
+            cart[itemIndex].quantity = newQuantity;
+            saveCart();
+            if (window.location.pathname.includes('cart.html')) {
+                displayCartItems();
+            }
+        }
+    }
+}
 
-// ========== INITIAL RENDER ==========
-renderRestaurants();
+// Clear entire cart
+function clearCart() {
+    if (confirm('Are you sure you want to clear your cart?')) {
+        cart = [];
+        saveCart();
+        if (window.location.pathname.includes('cart.html')) {
+            displayCartItems();
+        }
+        showToast('Cart cleared');
+    }
+}
+
+// Get cart total amount
+function getCartTotal() {
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}
+
+// Display cart items on cart page
+function displayCartItems() {
+    const container = document.getElementById('cartItemsContainer');
+    const totalContainer = document.getElementById('cartTotal');
+    
+    if (!container) return;
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart">
+                🛒 Your cart is empty!
+                <br><br>
+                <a href="restaurants.html" class="browse-btn">Browse Restaurants</a>
+            </div>
+        `;
+        if (totalContainer) totalContainer.innerHTML = '';
+        return;
+    }
+    
+    let subtotal = 0;
+    let totalDelivery = 0;
+    
+    container.innerHTML = cart.map(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        totalDelivery += item.deliveryFee;
+        
+        return `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80?text=Food'">
+                
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
+                    <p class="item-price">₹${item.price} each</p>
+                    <p class="item-location">📍 ${item.location}</p>
+                    <p class="item-delivery">🚚 Delivery: ₹${item.deliveryFee} • ⏱️ ${item.deliveryTime}</p>
+                </div>
+                
+                <div class="cart-item-actions">
+                    <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
+                    <span class="qty-number">${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">🗑️ Remove</button>
+                </div>
+                
+                <div class="cart-item-total">
+                    ₹${itemTotal}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    const grandTotal = subtotal + totalDelivery;
+    
+    if (totalContainer) {
+        totalContainer.innerHTML = `
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal (${cart.reduce((s,i) => s + i.quantity, 0)} items)</span>
+                    <span>₹${subtotal}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Charges</span>
+                    <span>₹${totalDelivery}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Amount</span>
+                    <span>₹${grandTotal}</span>
+                </div>
+                <button class="place-order-btn" onclick="placeOrder()">
+                    🍽️ Place Order • ₹${grandTotal}
+                </button>
+                <button class="clear-cart-btn" onclick="clearCart()">
+                    🗑️ Clear Cart
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Place order function
+function placeOrder() {
+    if (cart.length === 0) {
+        alert('❌ Your cart is empty! Add some items first.');
+        return;
+    }
+    
+    const orderId = 'ORD' + Date.now();
+    const total = getCartTotal() + cart.reduce((sum, i) => sum + i.deliveryFee, 0);
+    
+    const order = {
+        orderId: orderId,
+        items: [...cart],
+        subtotal: getCartTotal(),
+        deliveryFee: cart.reduce((sum, i) => sum + i.deliveryFee, 0),
+        total: total,
+        timestamp: new Date().toLocaleString(),
+        status: 'Confirmed'
+    };
+    
+    // Save to order history
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    
+    // Clear cart
+    cart = [];
+    saveCart();
+    
+    // Show success message
+    alert(`✅ ORDER PLACED SUCCESSFULLY!\n\nOrder ID: ${orderId}\nTotal: ₹${total}\n\nYour food will arrive in 30-40 minutes. 🍕\n\nThank you for ordering with Foodelicious!`);
+    
+    // Refresh cart page if on cart page
+    if (window.location.pathname.includes('cart.html')) {
+        displayCartItems();
+    } else {
+        // Optional: redirect to cart page
+        window.location.href = 'cart.html';
+    }
+}
+
+// Show notification toast
+function showToast(message) {
+    // Check if toast container exists
+    let toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        `;
+        document.body.appendChild(toastContainer);
+    }
+    
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        background: #4caf50;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        margin-top: 10px;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        cursor: pointer;
+    `;
+    toast.textContent = message;
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
+}
+
+// Add animation CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartCount();
+    if (document.getElementById('cartItemsContainer')) {
+        displayCartItems();
+    }
+});
