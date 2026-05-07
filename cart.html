@@ -4,38 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foodelicious - Your Cart</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#fefaf5;}
+        .header{background:#fefaf5;padding:16px;border-bottom:1px solid #f0e4d8;}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px;}
+        .logo{font-size:1.6rem;color:#d95c2b;text-decoration:none;}
+        .nav{display:flex;gap:28px;}
+        .nav a{text-decoration:none;color:#4a4a4a;}
+        .cart-item{background:white;padding:15px;margin:10px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+        .cart-total{background:white;padding:20px;border-radius:12px;margin-top:20px;font-size:1.2rem;}
+        .checkout-btn{background:#d95c2b;color:white;border:none;padding:12px 30px;border-radius:40px;cursor:pointer;font-size:1rem;margin-top:20px;}
+        .empty-cart{text-align:center;padding:60px;background:white;border-radius:12px;}
+        .qty-btn{background:#f0e4d8;border:none;padding:5px 12px;margin:0 5px;border-radius:8px;cursor:pointer;font-size:1rem;}
+        .remove-btn{background:#ffebee;color:#c62828;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;margin-left:10px;}
+        button{cursor:pointer;}
+    </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">🍜 Foodelicious</a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="restaurants.html">Restaurants</a></li>
-                    <li><a href="cart.html" class="active">Cart (<span id="cartCount">0</span>)</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <main>
-        <section class="cart-section">
-            <div class="container">
-                <h1>🛒 Your Shopping Cart</h1>
-                <div id="cartItemsContainer" class="cart-items"></div>
-                <div id="cartTotal" class="cart-total"></div>
+<header class="header">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+        <a href="index.html" class="logo">🍜 Foodelicious</a>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="restaurants.html">Restaurants</a>
+            <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
+        </div>
+    </div>
+</header>
+
+<section style="padding:40px 0;">
+    <div class="container">
+        <h1>🛒 Your Shopping Cart</h1>
+        <div id="cartItems"></div>
+        <div id="cartTotal"></div>
+    </div>
+</section>
+
+<script>
+// Load cart from localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function displayCart() {
+    const container = document.getElementById('cartItems');
+    const totalContainer = document.getElementById('cartTotal');
+    
+    if(!container) return;
+    
+    if(cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart">
+                <h2>🛒 Your cart is empty</h2>
+                <p>Add some delicious items from restaurants!</p>
+                <a href="restaurants.html" style="display:inline-block;margin-top:20px;background:#d95c2b;color:white;padding:10px 30px;border-radius:40px;text-decoration:none;">Browse Restaurants</a>
             </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>© 2026 Foodelicious | Taste the Authentic India</p>
+        `;
+        totalContainer.innerHTML = '';
+        return;
+    }
+    
+    let itemsHtml = '';
+    let subtotal = 0;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        itemsHtml += `
+            <div class="cart-item">
+                <div>
+                    <strong>${item.name}</strong><br>
+                    ₹${item.price} × ${item.quantity} = <strong>₹${itemTotal}</strong>
+                </div>
+                <div>
+                    <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                    <span style="margin:0 10px;">${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    const deliveryFee = 30;
+    const total = subtotal + deliveryFee;
+    
+    container.innerHTML = itemsHtml;
+    totalContainer.innerHTML = `
+        <div class="cart-total">
+            <p>Subtotal: ₹${subtotal}</p>
+            <p>Delivery Fee: ₹${deliveryFee}</p>
+            <hr style="margin:10px 0;">
+            <h3>Total: ₹${total}</h3>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
         </div>
-    </footer>
+    `;
+    
+    updateCartCount();
+}
 
-    <script src="restaurants.js"></script>
+function updateQuantity(index, change) {
+    if(cart[index]) {
+        cart[index].quantity += change;
+        if(cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+    }
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart();
+}
+
+function checkout() {
+    if(cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    
+    const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+    const total = subtotal + 30;
+    
+    alert(`🎉 Order Placed Successfully!\n\nTotal Amount: ₹${total}\n\nThank you for ordering from Foodelicious!`);
+    
+    // Clear cart
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart();
+}
+
+function updateCartCount() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountSpans = document.querySelectorAll('#cartCount');
+    cartCountSpans.forEach(span => {
+        if(span) span.innerText = totalItems;
+    });
+}
+
+// Display cart on load
+displayCart();
+</script>
 </body>
 </html>
