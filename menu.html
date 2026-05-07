@@ -191,18 +191,11 @@ function addToCart(id, name, price) {
     }
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    alert(`✅ ${name} added to cart!`);
-}
+    alert(name + " added to cart!");
+    
+    // - Cart count update
+    const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+    const cartSpan = document.getElementById('cartCount');
+    if(cartSpan) cartSpan.innerText = total;
 
-function updateCartCount() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let total = cart.reduce((sum, item) => sum + item.quantity, 0);
-    let span = document.getElementById('cartCount');
-    if(span) span.innerText = total;
 }
-
-// Initialize
-updateCartCount();
-</script>
-</body>
-</html>
