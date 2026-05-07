@@ -74,3 +74,14 @@
 </script>
 </body>
 </html>
+<script>
+    console.log("restaurants.js loaded");
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM ready");
+        if(typeof restaurants !== 'undefined') {
+            console.log("Restaurants found:", restaurants.length);
+        } else {
+            console.log("Restaurants array not found!");
+        }
+    });
+</script>
