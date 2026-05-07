@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodelicious - Restaurants</title>
+    <title>Restaurants - Foodelicious</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:Arial,sans-serif;background:#fefaf5;}
@@ -12,7 +12,8 @@
         .logo{font-size:1.6rem;color:#d95c2b;text-decoration:none;}
         .nav{display:flex;gap:28px;}
         .nav a{text-decoration:none;color:#4a4a4a;}
-        .restaurant-card{background:white;border-radius:16px;padding:15px;cursor:pointer;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+        .restaurant-card{background:white;border-radius:16px;padding:15px;margin:15px 0;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.1);transition:transform 0.2s;}
+        .restaurant-card:hover{transform:translateY(-3px);}
         .restaurant-card img{width:100%;height:150px;object-fit:cover;border-radius:12px;}
         .filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;}
         .filter-btn{padding:8px 20px;border:1px solid #ddd;border-radius:30px;cursor:pointer;background:white;}
@@ -23,7 +24,6 @@
     </style>
 </head>
 <body>
-
 <header class="header">
     <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
         <a href="index.html" class="logo">🍜 Foodelicious</a>
@@ -34,7 +34,6 @@
         </div>
     </div>
 </header>
-
 <section style="padding:40px 0;">
     <div class="container">
         <h1>🍽️ Restaurants Near You</h1>
@@ -42,34 +41,29 @@
             <input type="text" id="searchInput" placeholder="Search restaurant...">
             <button onclick="searchRestaurants()">🔍 Search</button>
         </div>
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all" onclick="filterRestaurants('all',this)">All</button>
-            <button class="filter-btn" data-filter="street-food" onclick="filterRestaurants('street-food',this)">Street Food</button>
-            <button class="filter-btn" data-filter="punjabi" onclick="filterRestaurants('punjabi',this)">Punjabi</button>
-            <button class="filter-btn" data-filter="south-indian" onclick="filterRestaurants('south-indian',this)">South Indian</button>
-            <button class="filter-btn" data-filter="chinese" onclick="filterRestaurants('chinese',this)">Chinese</button>
-        </div>
+        <div class="filters" id="filters"></div>
         <div id="restaurantsGrid"></div>
     </div>
 </section>
-
 <script>
 const restaurants = [
     {id:1,name:"Sharma Ji Ki Kachori",cuisine:"Street Food",category:"street-food",rating:4.5,location:"Old Delhi",time:"25-35 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop"},
     {id:2,name:"Bombay Chaiwala",cuisine:"Cafe",category:"street-food",rating:4.3,location:"Connaught Place",time:"20-30 min",deliveryFee:15,image:"https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop"},
-    {id:3,name:"Gangaram Chaat Bhandar",cuisine:"Street Food",category:"street-food",rating:4.8,location:"Chandni Chowk",time:"30-40 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=250&fit=crop"},
+    {id:3,name:"Gangaram Chaat Bhandar",cuisine:"Street Food",category:"street-food",rating:4.8,location:"Chandni Chowk",time:"30-40 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop"},
     {id:4,name:"Pind Balluchi",cuisine:"Punjabi",category:"punjabi",rating:4.6,location:"Rajouri Garden",time:"35-45 min",deliveryFee:30,image:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=250&fit=crop"},
     {id:5,name:"Bikanervala",cuisine:"Sweets",category:"punjabi",rating:4.4,location:"Karol Bagh",time:"25-35 min",deliveryFee:25,image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=250&fit=crop"},
     {id:6,name:"Sagar Ratna",cuisine:"South Indian",category:"south-indian",rating:4.5,location:"Lajpat Nagar",time:"20-30 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop"},
     {id:7,name:"Mamagoto",cuisine:"Chinese",category:"chinese",rating:4.7,location:"Hauz Khas",time:"30-40 min",deliveryFee:40,image:"https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=250&fit=crop"}
 ];
-
-function displayRestaurants(list) {
+const categories = ["all","street-food","punjabi","south-indian","chinese"];
+const categoryNames = {"all":"All","street-food":"Street Food","punjabi":"Punjabi","south-indian":"South Indian","chinese":"Chinese"};
+let currentFilter = "all";
+function displayRestaurants() {
     const grid = document.getElementById('restaurantsGrid');
-    if(!grid) return;
-    const data = list || restaurants;
-    grid.innerHTML = data.map(r => `
-        <div class="restaurant-card" onclick="location.href='menu.html?id=${r.id}'">
+    let filtered = restaurants;
+    if(currentFilter !== "all") filtered = restaurants.filter(r => r.category === currentFilter);
+    grid.innerHTML = filtered.map(r => `
+        <div class="restaurant-card" onclick="window.location.href='menu.html?id=${r.id}'">
             <img src="${r.image}" onerror="this.src='https://via.placeholder.com/400x150?text=Restaurant'">
             <h3>${r.name}</h3>
             <p>⭐ ${r.rating} | ${r.cuisine}</p>
@@ -78,27 +72,36 @@ function displayRestaurants(list) {
         </div>
     `).join('');
 }
-
 function filterRestaurants(category, btn) {
+    currentFilter = category;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    if(category === 'all') displayRestaurants(restaurants);
-    else displayRestaurants(restaurants.filter(r => r.category === category));
+    if(btn) btn.classList.add('active');
+    displayRestaurants();
 }
-
 function searchRestaurants() {
     const term = document.getElementById('searchInput').value.toLowerCase();
     const filtered = restaurants.filter(r => r.name.toLowerCase().includes(term) || r.cuisine.toLowerCase().includes(term));
-    displayRestaurants(filtered);
+    const grid = document.getElementById('restaurantsGrid');
+    grid.innerHTML = filtered.map(r => `
+        <div class="restaurant-card" onclick="window.location.href='menu.html?id=${r.id}'">
+            <img src="${r.image}">
+            <h3>${r.name}</h3>
+            <p>⭐ ${r.rating} | ${r.cuisine}</p>
+            <p>📍 ${r.location}</p>
+            <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
+        </div>
+    `).join('');
 }
-
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const total = cart.reduce((s,i) => s + i.quantity, 0);
     const span = document.getElementById('cartCount');
     if(span) span.innerText = total;
 }
-
+const filtersDiv = document.getElementById('filters');
+filtersDiv.innerHTML = categories.map(cat => 
+    `<button class="filter-btn ${cat === 'all' ? 'active' : ''}" data-filter="${cat}" onclick="filterRestaurants('${cat}', this)">${categoryNames[cat]}</button>`
+).join('');
 displayRestaurants();
 updateCartCount();
 </script>
