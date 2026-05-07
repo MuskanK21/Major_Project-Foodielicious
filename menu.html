@@ -1,522 +1,128 @@
-<!DOCTYPE html>
+<!DOCTYPE ht<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foodelicious - Menu</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        .restaurant-header {
-            background: linear-gradient(135deg, #fff5e8, #fefaf5);
-            padding: 40px 0;
-            border-bottom: 1px solid #f0e4d8;
-        }
-        .restaurant-info {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .restaurant-img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 20px;
-        }
-        .restaurant-details h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .restaurant-meta {
-            display: flex;
-            gap: 20px;
-            margin-top: 15px;
-        }
-        .restaurant-meta span {
-            background: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-        }
-        .menu-section {
-            padding: 40px 0 60px;
-        }
-        .menu-category {
-            margin-bottom: 40px;
-        }
-        .menu-category h2 {
-            font-size: 1.5rem;
-            border-bottom: 2px solid #f0e4d8;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .menu-items {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .menu-item-name {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-        .veg-badge, .nonveg-badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 8px;
-        }
-        .veg-badge { background: #e8f5e9; color: #2e7d32; }
-        .nonveg-badge { background: #ffebee; color: #c62828; }
-        .menu-item-desc {
-            font-size: 0.85rem;
-            color: #9b8a7a;
-            margin-top: 4px;
-        }
-        .menu-item-price {
-            font-weight: 600;
-            color: #d95c2b;
-            margin-top: 6px;
-        }
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .qty-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid #e0d4c8;
-            background: white;
-            cursor: pointer;
-        }
-        .add-btn {
-            background: #d95c2b;
-            color: white;
-            border: none;
-            padding: 6px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-left: 15px;
-        }
-        .cart-sidebar {
-            position: fixed;
-            right: -400px;
-            top: 0;
-            width: 380px;
-            height: 100vh;
-            background: white;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-        .cart-sidebar.open { right: 0; }
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            border-bottom: 1px solid #f0e4d8;
-        }
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .cart-footer {
-            padding: 20px;
-            border-top: 1px solid #f0e4d8;
-        }
-        .checkout-btn {
-            width: 100%;
-            background: #d95c2b;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #d95c2b;
-            text-decoration: none;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0e4d8;
-        }
-        @media (max-width: 768px) {
-            .menu-item { flex-direction: column; text-align: center; }
-            .cart-sidebar { width: 100%; right: -100%; }
-        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:Arial,sans-serif;background:#fefaf5;}
+        .header{background:#fefaf5;padding:16px;border-bottom:1px solid #f0e4d8;}
+        .container{max-width:1200px;margin:0 auto;padding:0 20px;}
+        .logo{font-size:1.6rem;color:#d95c2b;text-decoration:none;}
+        .nav{display:flex;gap:28px;}
+        .nav a{text-decoration:none;color:#4a4a4a;}
+        .menu-item{background:white;padding:15px;margin:10px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;}
+        .add-btn{background:#d95c2b;color:white;border:none;padding:8px 20px;border-radius:20px;cursor:pointer;}
+        .back-link{display:inline-block;margin:20px 0;color:#d95c2b;text-decoration:none;}
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="container header-container">
-            <a href="index.html" class="logo">🍛 foodelicious</a>
-            <nav class="nav">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="restaurants.html">Restaurants</a></li>
-                    <li><a href="#" id="cartIcon">Cart (<span id="cartCount">0</span>)</a></li>
-                </ul>
-            </nav>
-            <a href="restaurants.html" class="btn-order">Back to Restaurants</a>
-        </div>
-    </header>
-
-    <section class="restaurant-header" id="restaurantHeader">
-        <div class="container">
-            <a href="restaurants.html" class="back-link">← Back to Restaurants</a>
-            <div class="restaurant-info" id="restaurantInfo">
-                <div style="text-align: center; width: 100%;">Loading restaurant menu...</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="menu-section">
-        <div class="container">
-            <div id="menuContainer"></div>
-        </div>
-    </section>
-
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>Your Cart</h3>
-            <button id="closeCart">✕</button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <p style="text-align: center;">Cart is empty</p>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">Total: ₹<span id="cartTotal">0</span></div>
-            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+<header class="header">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+        <a href="index.html" class="logo">🍜 Foodelicious</a>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="restaurants.html">Restaurants</a>
+            <a href="cart.html">Cart (<span id="cartCount">0</span>)</a>
         </div>
     </div>
+</header>
 
-    <script src="script.js"></script>
-    <script>
-        // ========== COMPLETE MENU DATA (All 22 Restaurants) ==========
-        const allMenus = {
-            1: {
-                name: "Sharma Ji Ki Kachori",
-                image: "https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop",
-                cuisine: "Street Food",
-                rating: 4.5,
-                location: "Old Delhi, Near Chandni Chowk",
-                delivery: "25-35 min",
-                items: [
-                    { id: 101, name: "Pyaaz Kachori", price: 25, veg: true, desc: "Crispy kachori with onion filling" },
-                    { id: 102, name: "Dal Kachori", price: 30, veg: true, desc: "Stuffed with spicy dal" },
-                    { id: 103, name: "Samosa", price: 20, veg: true, desc: "Crispy samosa with aloo filling" },
-                    { id: 104, name: "Jalebi", price: 30, veg: true, desc: "4 pieces, crispy & sweet" }
-                ]
-            },
-            2: {
-                name: "Bombay Chaiwala",
-                image: "https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop",
-                cuisine: "Cafe • Street Food",
-                rating: 4.3,
-                location: "Connaught Place",
-                delivery: "20-30 min",
-                items: [
-                    { id: 201, name: "Cutting Chai", price: 15, veg: true, desc: "Strong masala chai" },
-                    { id: 202, name: "Vada Pav", price: 30, veg: true, desc: "Mumbai style vada pav" },
-                    { id: 203, name: "Bun Maska", price: 25, veg: true, desc: "Buttered bun with chai" },
-                    { id: 204, name: "Poha", price: 40, veg: true, desc: "Indori style poha" }
-                ]
-            },
-            3: {
-                name: "Gangaram Chaat Bhandar",
-                image: "https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop",
-                cuisine: "Street Food • Chaat",
-                rating: 4.8,
-                location: "Chandni Chowk",
-                delivery: "30-40 min",
-                items: [
-                    { id: 301, name: "Aloo Tikki", price: 40, veg: true, desc: "Crispy tikki with chutney" },
-                    { id: 302, name: "Papdi Chaat", price: 50, veg: true, desc: "Sweet & spicy chaat" },
-                    { id: 303, name: "Dahi Bhalla", price: 50, veg: true, desc: "Soft bhalla with curd" },
-                    { id: 304, name: "Gol Gappe", price: 30, veg: true, desc: "6 pieces" }
-                ]
-            },
-            7: {
-                name: "Amritsari Kulcha Hut",
-                image: "https://images.unsplash.com/photo-1597223557154-721c1cecc4bc?w=400&h=250&fit=crop",
-                cuisine: "Punjabi • Kulcha",
-                rating: 4.6,
-                location: "Rajouri Garden",
-                delivery: "30-40 min",
-                items: [
-                    { id: 701, name: "Aloo Kulcha", price: 50, veg: true, desc: "Stuffed with spicy aloo" },
-                    { id: 702, name: "Paneer Kulcha", price: 70, veg: true, desc: "Stuffed with paneer" },
-                    { id: 703, name: "Chole Kulcha", price: 80, veg: true, desc: "Kulcha with chole" },
-                    { id: 704, name: "Lassi", price: 40, veg: true, desc: "Sweet/salted lassi" }
-                ]
-            },
-            8: {
-                name: "Biryani Baigan",
-                image: "https://images.unsplash.com/photo-1563379091339-03b21a4c7e77?w=400&h=250&fit=crop",
-                cuisine: "Mughlai • Biryani",
-                rating: 4.7,
-                location: "Jamia Nagar",
-                delivery: "35-45 min",
-                items: [
-                    { id: 801, name: "Chicken Biryani", price: 150, veg: false, desc: "Hyderabadi style" },
-                    { id: 802, name: "Mutton Biryani", price: 220, veg: false, desc: "Slow cooked" },
-                    { id: 803, name: "Veg Biryani", price: 100, veg: true, desc: "With vegetables" },
-                    { id: 804, name: "Raita", price: 20, veg: true, desc: "Bowl of raita" }
-                ]
-            },
-            13: {
-                name: "Madhuram Sweets",
-                image: "https://images.unsplash.com/photo-1589301760014-2c6fc4f4c8f6?w=400&h=250&fit=crop",
-                cuisine: "South Indian • Sweets",
-                rating: 4.4,
-                location: "Lajpat Nagar",
-                delivery: "25-35 min",
-                items: [
-                    { id: 1301, name: "Masala Dosa", price: 70, veg: true, desc: "Crispy dosa with potato filling" },
-                    { id: 1302, name: "Idli (2 pcs)", price: 35, veg: true, desc: "Soft idli with sambhar" },
-                    { id: 1303, name: "Medu Vada", price: 40, veg: true, desc: "2 pieces with chutney" },
-                    { id: 1304, name: "Gulab Jamun", price: 30, veg: true, desc: "2 pieces" }
-                ]
-            },
-            17: {
-                name: "Momos Point",
-                image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&h=250&fit=crop",
-                cuisine: "Chinese • Tibetan",
-                rating: 4.5,
-                location: "Hauz Khas",
-                delivery: "20-30 min",
-                items: [
-                    { id: 1701, name: "Steamed Veg Momos", price: 50, veg: true, desc: "6 pieces" },
-                    { id: 1702, name: "Steamed Chicken Momos", price: 70, veg: false, desc: "6 pieces" },
-                    { id: 1703, name: "Fried Veg Momos", price: 60, veg: true, desc: "6 pieces" },
-                    { id: 1704, name: "Tandoori Momos", price: 90, veg: false, desc: "6 pieces" }
-                ]
-            }
-        };
+<section style="padding:40px 0;">
+    <div class="container">
+        <a href="restaurants.html" class="back-link">← Back to Restaurants</a>
+        <div id="restaurantInfo"></div>
+        <div id="menuContainer" style="margin-top:30px;"></div>
+    </div>
+</section>
 
-        // Get ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const restId = parseInt(urlParams.get('id'));
-        
-        console.log("Restaurant ID from URL:", restId);
-        
-        const restaurant = allMenus[restId];
+<script>
+const allMenus = {
+    1: {name:"Sharma Ji Ki Kachori",image:"https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop",cuisine:"Street Food",rating:4.5,location:"Old Delhi",delivery:"25-35 min",items:[
+        {id:101,name:"Pyaaz Kachori",price:25,veg:true,desc:"Crispy kachori"},
+        {id:102,name:"Samosa",price:20,veg:true,desc:"Crispy samosa"},
+        {id:103,name:"Jalebi",price:30,veg:true,desc:"Sweet jalebi"}
+    ]},
+    2: {name:"Bombay Chaiwala",image:"https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop",cuisine:"Cafe",rating:4.3,location:"Connaught Place",delivery:"20-30 min",items:[
+        {id:201,name:"Cutting Chai",price:15,veg:true,desc:"Masala chai"},
+        {id:202,name:"Vada Pav",price:30,veg:true,desc:"Mumbai style"}
+    ]},
+    3: {name:"Gangaram Chaat Bhandar",image:"https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop",cuisine:"Street Food",rating:4.8,location:"Chandni Chowk",delivery:"30-40 min",items:[
+        {id:301,name:"Aloo Tikki",price:40,veg:true,desc:"Crispy tikki"},
+        {id:302,name:"Papdi Chaat",price:50,veg:true,desc:"Sweet & spicy"}
+    ]},
+    4: {name:"Pind Balluchi",image:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=250&fit=crop",cuisine:"Punjabi",rating:4.6,location:"Rajouri Garden",delivery:"35-45 min",items:[
+        {id:401,name:"Butter Chicken",price:350,veg:false,desc:"Creamy curry"},
+        {id:402,name:"Dal Makhani",price:220,veg:true,desc:"Black lentils"}
+    ]},
+    5: {name:"Bikanervala",image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=250&fit=crop",cuisine:"Sweets",rating:4.4,location:"Karol Bagh",delivery:"25-35 min",items:[
+        {id:501,name:"Raj Kachori",price:90,veg:true,desc:"Large kachori"},
+        {id:502,name:"Kaju Katli",price:150,veg:true,desc:"Cashew sweet"}
+    ]},
+    6: {name:"Sagar Ratna",image:"https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop",cuisine:"South Indian",rating:4.5,location:"Lajpat Nagar",delivery:"20-30 min",items:[
+        {id:601,name:"Masala Dosa",price:70,veg:true,desc:"Crispy dosa"},
+        {id:602,name:"Idli",price:35,veg:true,desc:"Soft idli"}
+    ]},
+    7: {name:"Mamagoto",image:"https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=250&fit=crop",cuisine:"Chinese",rating:4.7,location:"Hauz Khas",delivery:"30-40 min",items:[
+        {id:701,name:"Veg Dimsums",price:160,veg:true,desc:"Steamed"},
+        {id:702,name:"Hakka Noodles",price:180,veg:true,desc:"Wok tossed"}
+    ]}
+};
 
-        if (!restaurant) {
-            document.getElementById('restaurantInfo').innerHTML = `
-                <div style="text-align: center; width: 100%;">
-                    <h2>❌ Restaurant not found!</h2>
-                    <p>Restaurant ID: ${restId}</p>
-                    <p>Please go back and select a restaurant from the list.</p>
-                    <a href="restaurants.html" style="color: #d95c2b;">← Back to Restaurants</a>
+const urlParams = new URLSearchParams(window.location.search);
+const restId = parseInt(urlParams.get('id'));
+const restaurant = allMenus[restId];
+
+if(!restaurant) {
+    document.getElementById('restaurantInfo').innerHTML = '<h2>Restaurant not found!</h2>';
+} else {
+    document.getElementById('restaurantInfo').innerHTML = `
+        <div style="display:flex;gap:20px;align-items:center;margin:20px 0;">
+            <img src="${restaurant.image}" style="width:120px;height:120px;object-fit:cover;border-radius:20px;">
+            <div>
+                <h1>${restaurant.name}</h1>
+                <p>⭐ ${restaurant.rating} | ${restaurant.cuisine}</p>
+                <p>📍 ${restaurant.location} | 🚚 ${restaurant.delivery}</p>
+            </div>
+        </div>
+    `;
+    
+    let menuHtml = '<h2>📋 Menu</h2>';
+    restaurant.items.forEach(item => {
+        menuHtml += `
+            <div class="menu-item">
+                <div>
+                    <strong>${item.name}</strong> ${item.veg ? '🌱 Veg' : '🍗 Non-Veg'}
+                    <p style="margin:5px 0;color:#666;">${item.desc}</p>
+                    <strong style="color:#d95c2b;">₹${item.price}</strong>
                 </div>
-            `;
-            document.getElementById('menuContainer').innerHTML = '';
-        } else {
-            // Show restaurant info
-            document.getElementById('restaurantInfo').innerHTML = `
-                <img src="${restaurant.image}" class="restaurant-img" onerror="this.src='https://via.placeholder.com/200x200?text=Food'">
-                <div class="restaurant-details">
-                    <h1>${restaurant.name}</h1>
-                    <p>${restaurant.cuisine}</p>
-                    <div class="restaurant-meta">
-                        <span>★ ${restaurant.rating}</span>
-                        <span>📍 ${restaurant.location}</span>
-                        <span>🚚 ${restaurant.delivery}</span>
-                    </div>
-                </div>
-            `;
+                <button class="add-btn" onclick="addToCart(${item.id},'${item.name}',${item.price})">Add to Cart</button>
+            </div>
+        `;
+    });
+    document.getElementById('menuContainer').innerHTML = menuHtml;
+}
 
-            // Show menu
-            let menuHtml = `
-                <div class="menu-category">
-                    <h2>📋 Menu</h2>
-                    <div class="menu-items">
-            `;
-            
-            restaurant.items.forEach(item => {
-                menuHtml += `
-                    <div class="menu-item" id="item-${item.id}">
-                        <div style="flex: 1;">
-                            <div class="menu-item-name">
-                                ${item.name}
-                                <span class="${item.veg ? 'veg-badge' : 'nonveg-badge'}">${item.veg ? '🌱 Veg' : '🍗 Non-Veg'}</span>
-                            </div>
-                            <div class="menu-item-desc">${item.desc}</div>
-                            <div class="menu-item-price">₹${item.price}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div class="quantity-control" style="margin-bottom: 8px;">
-                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                                <span id="qty-${item.id}" style="min-width: 30px; text-align: center;">0</span>
-                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
-                            </div>
-                            <button class="add-btn" onclick="addToCart(${item.id}, '${item.name}', ${item.price}, ${item.veg})">Add to Cart</button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            menuHtml += `</div></div>`;
-            document.getElementById('menuContainer').innerHTML = menuHtml;
-        }
+function addToCart(id, name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let existing = cart.find(i => i.id === id);
+    if(existing) existing.quantity++;
+    else cart.push({id, name, price, quantity: 1});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert(name + " added to cart!");
+}
 
-        // ========== CART FUNCTIONS ==========
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let itemQtys = {};
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = cart.reduce((s,i) => s + i.quantity, 0);
+    let span = document.getElementById('cartCount');
+    if(span) span.innerText = total;
+}
 
-        function updateQty(id, change) {
-            let current = itemQtys[id] || 0;
-            let newQty = Math.max(0, current + change);
-            itemQtys[id] = newQty;
-            let span = document.getElementById(`qty-${id}`);
-            if (span) span.innerText = newQty;
-        }
-
-        window.updateQty = updateQty;
-
-        function addToCart(id, name, price, veg) {
-            let qty = itemQtys[id] || 0;
-            if (qty === 0) {
-                alert("⚠️ Please select quantity first!");
-                return;
-            }
-            
-            let existing = cart.find(i => i.id === id);
-            if (existing) {
-                existing.quantity += qty;
-            } else {
-                cart.push({ id, name, price, veg, quantity: qty });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            itemQtys[id] = 0;
-            let span = document.getElementById(`qty-${id}`);
-            if (span) span.innerText = "0";
-            updateCartCount();
-            updateCartDisplay();
-            alert(`✅ ${qty} x ${name} added to cart!`);
-        }
-
-        window.addToCart = addToCart;
-
-        function updateCartCount() {
-            let totalItems = cart.reduce((sum, i) => sum + i.quantity, 0);
-            let countSpan = document.getElementById('cartCount');
-            if (countSpan) countSpan.innerText = totalItems;
-        }
-
-        function updateCartDisplay() {
-            let container = document.getElementById('cartItems');
-            let totalSpan = document.getElementById('cartTotal');
-            
-            if (!container) return;
-            
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #9b8a7a;">🛒 Your cart is empty</p>';
-                if (totalSpan) totalSpan.innerText = "0";
-                return;
-            }
-            
-            let total = 0;
-            container.innerHTML = cart.map(item => {
-                total += item.price * item.quantity;
-                return `
-                    <div class="cart-item">
-                        <div>
-                            <strong>${item.name}</strong>
-                            <span class="${item.veg ? 'veg-badge' : 'nonveg-badge'}">${item.veg ? 'Veg' : 'Non-Veg'}</span>
-                            <br>
-                            ₹${item.price} x ${item.quantity}
-                        </div>
-                        <div>
-                            <button class="qty-btn" onclick="updateCartItem(${item.id}, -1)">-</button>
-                            <span style="margin: 0 5px;">${item.quantity}</span>
-                            <button class="qty-btn" onclick="updateCartItem(${item.id}, 1)">+</button>
-                            <button class="qty-btn" onclick="removeCartItem(${item.id})" style="color: #c62828;">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            if (totalSpan) totalSpan.innerText = total;
-        }
-
-        window.updateCartItem = function(id, change) {
-            let item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartCount();
-                updateCartDisplay();
-            }
-        };
-
-        window.removeCartItem = function(id) {
-            cart = cart.filter(i => i.id !== id);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            updateCartDisplay();
-        };
-
-        // Cart sidebar
-        const cartIcon = document.getElementById('cartIcon');
-        const cartSidebar = document.getElementById('cartSidebar');
-        const closeCart = document.getElementById('closeCart');
-        
-        if (cartIcon) {
-            cartIcon.addEventListener('click', (e) => {
-                e.preventDefault();
-                updateCartDisplay();
-                cartSidebar.classList.add('open');
-            });
-        }
-        
-        if (closeCart) {
-            closeCart.addEventListener('click', () => {
-                cartSidebar.classList.remove('open');
-            });
-        }
-        
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        if (checkoutBtn) {
-            checkoutBtn.addEventListener('click', () => {
-                if (cart.length === 0) {
-                    alert("🛒 Your cart is empty!");
-                } else {
-                    let total = cart.reduce((s, i) => s + (i.price * i.quantity), 0);
-                    alert(`🎉 Order placed successfully!\nTotal: ₹${total}\n\nThank you for ordering from Foodelicious!`);
-                    cart = [];
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartCount();
-                    updateCartDisplay();
-                    cartSidebar.classList.remove('open');
-                }
-            });
-        }
-
-        updateCartCount();
-    </script>
+updateCartCount();
+</script>
 </body>
 </html>
