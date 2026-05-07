@@ -128,26 +128,146 @@ function checkout() {
     }
     
     const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const total = subtotal + 30;
+    const deliveryFee = 30;
+    const total = subtotal + deliveryFee;
     
-    alert(`🎉 Order Placed Successfully!\n\nTotal Amount: ₹${total}\n\nThank you for ordering from Foodelicious!`);
+    // Payment option dialog
+    const paymentMethod = prompt(
+        "💰 Select Payment Method:\n\n" +
+        "1 - Cash on Delivery (COD)\n" +
+        "2 - Online Payment (Card/UPI)\n\n" +
+        "Enter 1 or 2:"
+    );
     
-    // Clear cart
-    cart = [];
-    localStorage.setItem('cart', JSON.stringify(cart));
-    displayCart();
+    if(paymentMethod === "1") {
+        // COD
+        const orderConfirm = confirm(
+            `📦 ORDER SUMMARY\n\n` +
+            `Items: ${cart.length}\n` +
+            `Subtotal: ₹${subtotal}\n` +
+            `Delivery: ₹${deliveryFee}\n` +
+            `Total: ₹${total}\n\n` +
+            `Payment: Cash on Delivery\n\n` +
+            `Confirm order?`
+        );
+        
+        if(orderConfirm) {
+            alert(`✅ ORDER PLACED SUCCESSFULLY!\n\nOrder will be delivered in 30-40 minutes.\nPay ₹${total} in cash at delivery.\n\nThank you for ordering from Foodelicious! 🍜`);
+            
+            // Save order to history
+            saveOrder(cart, subtotal, deliveryFee, total, "Cash on Delivery");
+            
+            // Clear cart
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+        
+    } else if(paymentMethod === "2") {
+        // Online Payment
+        onlinePayment(total, subtotal, deliveryFee);
+        
+    } else {
+        alert("❌ Payment cancelled. Please try again.");
+    }
 }
 
-function updateCartCount() {
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartCountSpans = document.querySelectorAll('#cartCount');
-    cartCountSpans.forEach(span => {
-        if(span) span.innerText = totalItems;
-    });
+function onlinePayment(total, subtotal, deliveryFee) {
+    const paymentOption = prompt(
+        "💳 Online Payment Options:\n\n" +
+        "1 - Credit/Debit Card\n" +
+        "2 - UPI (Google Pay/PhonePe)\n" +
+        "3 - Net Banking\n\n" +
+        "Enter 1, 2 or 3:"
+    );
+    
+    if(paymentOption === "1") {
+        const cardNumber = prompt("Enter Card Number (4111 1111 1111 1111 for demo):");
+        if(cardNumber && cardNumber.length >= 10) {
+            processOnlinePayment(total, subtotal, deliveryFee, "Card Payment");
+        } else {
+            alert("❌ Invalid card number. Payment cancelled.");
+        }
+        
+    } else if(paymentOption === "2") {
+        const upiId = prompt("Enter UPI ID (example@okhdfcbank):");
+        if(upiId && upiId.includes('@')) {
+            processOnlinePayment(total, subtotal, deliveryFee, "UPI Payment");
+        } else {
+            alert("❌ Invalid UPI ID. Payment cancelled.");
+        }
+        
+    } else if(paymentOption === "3") {
+        const bank = prompt("Select Bank:\n1 - HDFC\n2 - SBI\n3 - ICICI");
+        if(bank === "1" || bank === "2" || bank === "3") {
+            processOnlinePayment(total, subtotal, deliveryFee, "Net Banking");
+        } else {
+            alert("❌ Payment cancelled.");
+        }
+        
+    } else {
+        alert("❌ Payment cancelled.");
+    }
 }
 
-// Display cart on load
-displayCart();
-</script>
-</body>
-</html>
+function processOnlinePayment(total, subtotal, deliveryFee, method) {
+    // Simulate payment processing
+    const processing = confirm(
+        `💳 Processing ${method} of ₹${total}\n\n` +
+        `Click OK to simulate payment...`
+    );
+    
+    if(processing) {
+        // Random success (90% success for demo)
+        const success = Math.random() < 0.9;
+        
+        if(success) {
+            alert(
+                `✅ PAYMENT SUCCESSFUL!\n\n` +
+                `Amount: ₹${total}\n` +
+                `Payment Method: ${method}\n` +
+                `Transaction ID: TXN${Math.floor(Math.random()*1000000)}\n\n` +
+                `Your order has been placed successfully!\n` +
+                `Food will be delivered in 30-40 minutes.\n\n` +
+                `Thank you for ordering from Foodelicious! 🍜`
+            );
+            
+            // Save order to history
+            saveOrder(cart, subtotal, deliveryFee, total, method);
+            
+            // Clear cart
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        } else {
+            alert(
+                `❌ PAYMENT FAILED!\n\n` +
+                `Transaction could not be completed.\n\n` +
+                `Please try again with different payment method.\n` +
+                `Your cart has been saved.`
+            );
+        }
+    } else {
+        alert("❌ Payment cancelled.");
+    }
+}
+
+function saveOrder(cartItems, subtotal, deliveryFee, total, paymentMethod) {
+    const order = {
+        id: "ORD" + Date.now(),
+        date: new Date().toLocaleString(),
+        items: cartItems,
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
+        total: total,
+        paymentMethod: paymentMethod,
+        status: "Confirmed"
+    };
+    
+    // Get existing orders
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    
+    console.log("Order saved:", order);
+}
