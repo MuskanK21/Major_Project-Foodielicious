@@ -62,26 +62,72 @@
     </div>
 </footer>
 
-<script src="restaurants.js"></script>
 <script>
-    // Extra initialization to ensure restaurants load
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof displayRestaurants === 'function') {
-            displayRestaurants();
-        }
-        updateCartCount();
-    });
-</script>
-</body>
-</html>
-<script>
-    console.log("restaurants.js loaded");
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM ready");
-        if(typeof restaurants !== 'undefined') {
-            console.log("Restaurants found:", restaurants.length);
-        } else {
-            console.log("Restaurants array not found!");
-        }
-    });
+// ========== COMPLETE RESTAURANT DATA ==========
+const restaurants = [
+    { id: 1, name: "Sharma Ji Ki Kachori", cuisine: "Street Food", category: "street-food", rating: 4.5, reviews: 342, location: "Old Delhi", time: "25-35 min", deliveryFee: 20, image: "https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop" },
+    { id: 2, name: "Bombay Chaiwala", cuisine: "Cafe", category: "street-food", rating: 4.3, reviews: 218, location: "Connaught Place", time: "20-30 min", deliveryFee: 15, image: "https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop" },
+    { id: 3, name: "Gangaram Chaat Bhandar", cuisine: "Street Food", category: "street-food", rating: 4.8, reviews: 789, location: "Chandni Chowk", time: "30-40 min", deliveryFee: 20, image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=250&fit=crop" },
+    { id: 4, name: "Pind Balluchi", cuisine: "Punjabi", category: "punjabi", rating: 4.6, reviews: 567, location: "Rajouri Garden", time: "35-45 min", deliveryFee: 30, image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=250&fit=crop" },
+    { id: 5, name: "Bikanervala", cuisine: "Sweets", category: "punjabi", rating: 4.4, reviews: 1234, location: "Karol Bagh", time: "25-35 min", deliveryFee: 25, image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=250&fit=crop" },
+    { id: 6, name: "Sagar Ratna", cuisine: "South Indian", category: "south-indian", rating: 4.5, reviews: 892, location: "Lajpat Nagar", time: "20-30 min", deliveryFee: 20, image: "https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop" },
+    { id: 7, name: "Mamagoto", cuisine: "Chinese", category: "chinese", rating: 4.7, reviews: 654, location: "Hauz Khas", time: "30-40 min", deliveryFee: 40, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=250&fit=crop" }
+];
+
+function displayRestaurants() {
+    const grid = document.getElementById('restaurantsGrid');
+    if(!grid) return;
+    
+    grid.innerHTML = restaurants.map(r => `
+        <div class="restaurant-card" onclick="location.href='menu.html?id=${r.id}'" style="background:white;border-radius:16px;padding:15px;cursor:pointer;margin-bottom:15px;">
+            <img src="${r.image}" style="width:100%;height:150px;object-fit:cover;border-radius:12px;">
+            <h3>${r.name}</h3>
+            <p>⭐ ${r.rating} | ${r.cuisine}</p>
+            <p>📍 ${r.location}</p>
+            <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
+        </div>
+    `).join('');
+}
+
+function filterRestaurants(cat) {
+    let filtered = restaurants;
+    if(cat !== 'all') filtered = restaurants.filter(r => r.category === cat);
+    const grid = document.getElementById('restaurantsGrid');
+    grid.innerHTML = filtered.map(r => `
+        <div class="restaurant-card" onclick="location.href='menu.html?id=${r.id}'" style="background:white;border-radius:16px;padding:15px;cursor:pointer;">
+            <img src="${r.image}" style="width:100%;height:150px;object-fit:cover;border-radius:12px;">
+            <h3>${r.name}</h3>
+            <p>⭐ ${r.rating} | ${r.cuisine}</p>
+            <p>📍 ${r.location}</p>
+            <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
+        </div>
+    `).join('');
+}
+
+function searchRestaurants() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = restaurants.filter(r => r.name.toLowerCase().includes(term) || r.cuisine.toLowerCase().includes(term));
+    const grid = document.getElementById('restaurantsGrid');
+    grid.innerHTML = filtered.map(r => `
+        <div class="restaurant-card" onclick="location.href='menu.html?id=${r.id}'" style="background:white;border-radius:16px;padding:15px;cursor:pointer;">
+            <img src="${r.image}" style="width:100%;height:150px;object-fit:cover;border-radius:12px;">
+            <h3>${r.name}</h3>
+            <p>⭐ ${r.rating} | ${r.cuisine}</p>
+            <p>📍 ${r.location}</p>
+            <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
+        </div>
+    `).join('');
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const total = cart.reduce((s,i) => s + i.quantity, 0);
+    const span = document.getElementById('cartCount');
+    if(span) span.innerText = total;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    displayRestaurants();
+    updateCartCount();
+});
 </script>
