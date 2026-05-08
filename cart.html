@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodelicious - Your Cart</title>
+    <title>Cart - Foodelicious</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:Arial,sans-serif;background:#fefaf5;}
@@ -13,16 +13,15 @@
         .nav{display:flex;gap:28px;}
         .nav a{text-decoration:none;color:#4a4a4a;}
         .cart-item{background:white;padding:15px;margin:10px 0;border-radius:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-        .cart-total{background:white;padding:20px;border-radius:12px;margin-top:20px;font-size:1.2rem;}
+        .cart-total{background:white;padding:20px;border-radius:12px;margin-top:20px;}
         .checkout-btn{background:#d95c2b;color:white;border:none;padding:12px 30px;border-radius:40px;cursor:pointer;font-size:1rem;margin-top:20px;}
         .empty-cart{text-align:center;padding:60px;background:white;border-radius:12px;}
         .qty-btn{background:#f0e4d8;border:none;padding:5px 12px;margin:0 5px;border-radius:8px;cursor:pointer;font-size:1rem;}
         .remove-btn{background:#ffebee;color:#c62828;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;margin-left:10px;}
-        button{cursor:pointer;}
+        .continue-btn{background:white;color:#d95c2b;border:2px solid #d95c2b;padding:10px 25px;border-radius:40px;cursor:pointer;text-decoration:none;display:inline-block;margin-right:10px;}
     </style>
 </head>
 <body>
-
 <header class="header">
     <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
         <a href="index.html" class="logo">🍜 Foodelicious</a>
@@ -33,34 +32,42 @@
         </div>
     </div>
 </header>
-
 <section style="padding:40px 0;">
     <div class="container">
-        <h1>🛒 Your Shopping Cart</h1>
-        <div id="cartItems"></div>
-        <div id="cartTotal"></div>
+        <h1>🛒 Your Cart</h1>
+        <div id="cartItemsList"></div>
+        <div id="cartSummary"></div>
     </div>
 </section>
 
 <script>
 // Load cart from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
+
+function loadCart() {
+    const savedCart = localStorage.getItem('cart');
+    if(savedCart) {
+        cart = JSON.parse(savedCart);
+    } else {
+        cart = [];
+    }
+    displayCart();
+}
 
 function displayCart() {
-    const container = document.getElementById('cartItems');
-    const totalContainer = document.getElementById('cartTotal');
+    const container = document.getElementById('cartItemsList');
+    const summaryContainer = document.getElementById('cartSummary');
     
-    if(!container) return;
-    
-    if(cart.length === 0) {
+    if(!cart || cart.length === 0) {
         container.innerHTML = `
             <div class="empty-cart">
                 <h2>🛒 Your cart is empty</h2>
                 <p>Add some delicious items from restaurants!</p>
-                <a href="restaurants.html" style="display:inline-block;margin-top:20px;background:#d95c2b;color:white;padding:10px 30px;border-radius:40px;text-decoration:none;">Browse Restaurants</a>
+                <a href="restaurants.html" style="display:inline-block;margin-top:20px;background:#d95c2b;color:white;padding:12px 30px;border-radius:40px;text-decoration:none;">Browse Restaurants</a>
             </div>
         `;
-        totalContainer.innerHTML = '';
+        summaryContainer.innerHTML = '';
+        updateCartCount();
         return;
     }
     
@@ -91,13 +98,16 @@ function displayCart() {
     const total = subtotal + deliveryFee;
     
     container.innerHTML = itemsHtml;
-    totalContainer.innerHTML = `
+    summaryContainer.innerHTML = `
         <div class="cart-total">
-            <p>Subtotal: ₹${subtotal}</p>
-            <p>Delivery Fee: ₹${deliveryFee}</p>
+            <p><strong>Subtotal:</strong> ₹${subtotal}</p>
+            <p><strong>Delivery Fee:</strong> ₹${deliveryFee}</p>
             <hr style="margin:10px 0;">
             <h3>Total: ₹${total}</h3>
-            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+            <div style="margin-top:20px;">
+                <a href="restaurants.html" class="continue-btn">➕ Add More Items</a>
+                <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+            </div>
         </div>
     `;
     
@@ -121,153 +131,52 @@ function removeItem(index) {
     displayCart();
 }
 
+function updateCartCount() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountSpans = document.querySelectorAll('#cartCount');
+    cartCountSpans.forEach(span => {
+        if(span) span.innerText = totalItems;
+    });
+}
+
 function checkout() {
     if(cart.length === 0) {
         alert("Your cart is empty!");
         return;
     }
     
-    const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const deliveryFee = 30;
-    const total = subtotal + deliveryFee;
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = subtotal + 30;
     
-    // Payment option dialog
     const paymentMethod = prompt(
-        "💰 Select Payment Method:\n\n" +
+        "💳 SELECT PAYMENT METHOD\n\n" +
         "1 - Cash on Delivery (COD)\n" +
         "2 - Online Payment (Card/UPI)\n\n" +
         "Enter 1 or 2:"
     );
     
     if(paymentMethod === "1") {
-        // COD
-        const orderConfirm = confirm(
-            `📦 ORDER SUMMARY\n\n` +
-            `Items: ${cart.length}\n` +
-            `Subtotal: ₹${subtotal}\n` +
-            `Delivery: ₹${deliveryFee}\n` +
-            `Total: ₹${total}\n\n` +
-            `Payment: Cash on Delivery\n\n` +
-            `Confirm order?`
-        );
-        
-        if(orderConfirm) {
+        if(confirm(`📦 Order Summary\n\nTotal Amount: ₹${total}\nPayment: Cash on Delivery\n\nConfirm order?`)) {
             alert(`✅ ORDER PLACED SUCCESSFULLY!\n\nOrder will be delivered in 30-40 minutes.\nPay ₹${total} in cash at delivery.\n\nThank you for ordering from Foodelicious! 🍜`);
-            
-            // Save order to history
-            saveOrder(cart, subtotal, deliveryFee, total, "Cash on Delivery");
-            
-            // Clear cart
             cart = [];
             localStorage.setItem('cart', JSON.stringify(cart));
             displayCart();
         }
-        
-    } else if(paymentMethod === "2") {
-        // Online Payment
-        onlinePayment(total, subtotal, deliveryFee);
-        
-    } else {
-        alert("❌ Payment cancelled. Please try again.");
+    } 
+    else if(paymentMethod === "2") {
+        alert("💳 DEMO PAYMENT\n\nCard: 4111 1111 1111 1111\nCVV: 123\nExpiry: 12/28\n\nAny UPI ID also works!\n\n✅ Payment Successful!");
+        alert(`✅ ORDER PLACED SUCCESSFULLY!\n\nTotal Amount: ₹${total}\nPayment: Online Payment\n\nThank you for ordering from Foodelicious! 🍜`);
+        cart = [];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+    }
+    else {
+        alert("❌ Payment cancelled. Your cart is safe.");
     }
 }
 
-function onlinePayment(total, subtotal, deliveryFee) {
-    const paymentOption = prompt(
-        "💳 Online Payment Options:\n\n" +
-        "1 - Credit/Debit Card\n" +
-        "2 - UPI (Google Pay/PhonePe)\n" +
-        "3 - Net Banking\n\n" +
-        "Enter 1, 2 or 3:"
-    );
-    
-    if(paymentOption === "1") {
-        const cardNumber = prompt("Enter Card Number (4111 1111 1111 1111 for demo):");
-        if(cardNumber && cardNumber.length >= 10) {
-            processOnlinePayment(total, subtotal, deliveryFee, "Card Payment");
-        } else {
-            alert("❌ Invalid card number. Payment cancelled.");
-        }
-        
-    } else if(paymentOption === "2") {
-        const upiId = prompt("Enter UPI ID (example@okhdfcbank):");
-        if(upiId && upiId.includes('@')) {
-            processOnlinePayment(total, subtotal, deliveryFee, "UPI Payment");
-        } else {
-            alert("❌ Invalid UPI ID. Payment cancelled.");
-        }
-        
-    } else if(paymentOption === "3") {
-        const bank = prompt("Select Bank:\n1 - HDFC\n2 - SBI\n3 - ICICI");
-        if(bank === "1" || bank === "2" || bank === "3") {
-            processOnlinePayment(total, subtotal, deliveryFee, "Net Banking");
-        } else {
-            alert("❌ Payment cancelled.");
-        }
-        
-    } else {
-        alert("❌ Payment cancelled.");
-    }
-}
-
-function processOnlinePayment(total, subtotal, deliveryFee, method) {
-    // Simulate payment processing
-    const processing = confirm(
-        `💳 Processing ${method} of ₹${total}\n\n` +
-        `Click OK to simulate payment...`
-    );
-    
-    if(processing) {
-        // Random success (90% success for demo)
-        const success = Math.random() < 0.9;
-        
-        if(success) {
-            alert(
-                `✅ PAYMENT SUCCESSFUL!\n\n` +
-                `Amount: ₹${total}\n` +
-                `Payment Method: ${method}\n` +
-                `Transaction ID: TXN${Math.floor(Math.random()*1000000)}\n\n` +
-                `Your order has been placed successfully!\n` +
-                `Food will be delivered in 30-40 minutes.\n\n` +
-                `Thank you for ordering from Foodelicious! 🍜`
-            );
-            
-            // Save order to history
-            saveOrder(cart, subtotal, deliveryFee, total, method);
-            
-            // Clear cart
-            cart = [];
-            localStorage.setItem('cart', JSON.stringify(cart));
-            displayCart();
-        } else {
-            alert(
-                `❌ PAYMENT FAILED!\n\n` +
-                `Transaction could not be completed.\n\n` +
-                `Please try again with different payment method.\n` +
-                `Your cart has been saved.`
-            );
-        }
-    } else {
-        alert("❌ Payment cancelled.");
-    }
-}
-
-function saveOrder(cartItems, subtotal, deliveryFee, total, paymentMethod) {
-    const order = {
-        id: "ORD" + Date.now(),
-        date: new Date().toLocaleString(),
-        items: cartItems,
-        subtotal: subtotal,
-        deliveryFee: deliveryFee,
-        total: total,
-        paymentMethod: paymentMethod,
-        status: "Confirmed"
-    };
-    
-    // Get existing orders
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.push(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    
-    console.log("Order saved:", order);
-}
+// Initialize page
+loadCart();
+</script>
+</body>
+</html>
