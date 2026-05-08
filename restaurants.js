@@ -4,7 +4,7 @@
 const allMenus = {
     1: {  // Sharma Ji Ki Kachori
         name: "Sharma Ji Ki Kachori",
-        image: "https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop",
+        image: "https://www.bing.com/images/search?view=detailV2&ccid=oDTPfsX9&id=1F716015604E9D340C4191779C7875FF990196E2&thid=OIP.oDTPfsX9xvI-fdyU2ltDvAHaEK&mediaurl=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fe1%2F92%2F47%2Fe19247c5a57f35814c349bf8e494b54d.jpg&exph=1462&expw=2600&q=kachori+images&form=IQFRBA&ck=E4C58663210121796F0A88D8E4837A86&selectedindex=1&ajaxhist=0&ajaxserp=0&vt=0&sim=11",
         cuisine: "Street Food",
         rating: 4.5,
         location: "Old Delhi, Near Chandni Chowk",
@@ -17,7 +17,7 @@ const allMenus = {
     },
     2: {  // Bombay Chaiwala
         name: "Bombay Chaiwala",
-        image: "https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop",
+        image: "https://www.bing.com/images/search?view=detailV2&ccid=sT4QYPOU&id=85AC736B0412256CE52BC0BCBEF67E9D99FB34CF&thid=OIP.sT4QYPOU69qzcgpluSC0BgHaHa&mediaurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100067434963607&exph=960&expw=959&q=bombay+chaiwala&form=IRPRST&ck=9158014553940874C639B3A4A6F9CB0A&selectedindex=16&itb=0&cw=1375&ch=628&ajaxhist=0&ajaxserp=0&vt=0&sim=11",
         cuisine: "Cafe • Street Food",
         rating: 4.3,
         location: "Connaught Place",
@@ -29,7 +29,7 @@ const allMenus = {
     },
     3: {  // Gangaram Chaat Bhandar
         name: "Gangaram Chaat Bhandar",
-        image: "https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop",
+        image: "https://www.bing.com/images/search?view=detailV2&ccid=3q7nzUl5&id=03BA4350C7D73A253EC33DF7264428826E83932A&thid=OIP.3q7nzUl5rUrXzqIioJ9HxQHaFj&mediaurl=https%3A%2F%2Fwww.carolinescooking.com%2Fwp-content%2Fuploads%2F2023%2F07%2Fpapdi-chaat-photo-1024x768.jpg&exph=768&expw=1024&q=chaat+papdi&FORM=IRPRST&ck=66CD55B906DAC240D24AE21937D64F1E&selectedIndex=7&itb=0&cw=1375&ch=628&ajaxhist=0&ajaxserp=0",
         cuisine: "Street Food • Chaat",
         rating: 4.8,
         location: "Chandni Chowk",
@@ -65,7 +65,7 @@ const allMenus = {
     },
     6: {  // Sagar Ratna
         name: "Sagar Ratna",
-        image: "https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop",
+        image: "https://www.bing.com/images/search?view=detailV2&ccid=dOFa9Q7f&id=EBCB016E15165EEF61746C21B2412FD69CAF2276&thid=OIP.dOFa9Q7fXCP7AAk6wxihFwHaDN&mediaurl=https%3A%2F%2Fwww.lsretail.com%2Fhubfs%2FSagar+Ratna.jpg&exph=380&expw=878&q=sagar+ratna+image&FORM=IRPRST&ck=6E8CA2C93471D2E31C2A456ABB885F9B&selectedIndex=13&itb=0&cw=1375&ch=628&ajaxhist=0&ajaxserp=0",
         cuisine: "South Indian",
         rating: 4.5,
         location: "Lajpat Nagar",
