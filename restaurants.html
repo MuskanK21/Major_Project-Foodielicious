@@ -18,9 +18,13 @@
         .filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0;}
         .filter-btn{padding:8px 20px;border:1px solid #ddd;border-radius:30px;cursor:pointer;background:white;}
         .filter-btn.active{background:#d95c2b;color:white;border-color:#d95c2b;}
-        .search-box{display:flex;gap:10px;margin:20px 0;}
+        .search-box{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;}
         .search-box input{flex:1;padding:12px;border-radius:40px;border:1px solid #ddd;}
         .search-box button{padding:12px 28px;background:#d95c2b;color:white;border:none;border-radius:40px;cursor:pointer;}
+        .search-type{display:flex;gap:10px;margin-top:10px;}
+        .search-type label{cursor:pointer;padding:5px 10px;background:#f0e4d8;border-radius:20px;}
+        .search-type input:checked + label{background:#d95c2b;color:white;}
+        .no-results{text-align:center;padding:40px;background:white;border-radius:12px;}
     </style>
 </head>
 <body>
@@ -37,73 +41,168 @@
 <section style="padding:40px 0;">
     <div class="container">
         <h1>🍽️ Restaurants Near You</h1>
+        
+        <!-- Search Box -->
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search restaurant...">
+            <input type="text" id="searchInput" placeholder="Search by restaurant or food (e.g., Pizza, Biryani, Dosa)...">
             <button onclick="searchRestaurants()">🔍 Search</button>
         </div>
+        
+        <!-- Search Type Selection -->
+        <div class="search-type">
+            <label>
+                <input type="radio" name="searchType" value="both" checked onchange="searchRestaurants()"> 🔍 All
+            </label>
+            <label>
+                <input type="radio" name="searchType" value="restaurant" onchange="searchRestaurants()"> 🏪 Restaurant Name
+            </label>
+            <label>
+                <input type="radio" name="searchType" value="food" onchange="searchRestaurants()"> 🍕 Food/Dish
+            </label>
+        </div>
+        
+        <!-- Filters -->
         <div class="filters" id="filters"></div>
+        
+        <!-- Results Count -->
+        <div id="resultsCount" style="margin:10px 0;color:#6b5e52;"></div>
+        
+        <!-- Restaurants Grid -->
         <div id="restaurantsGrid"></div>
     </div>
 </section>
+
 <script>
+// Restaurants Data with menu items for food search
 const restaurants = [
-    {id:1,name:"Sharma Ji Ki Kachori",cuisine:"Street Food",category:"street-food",rating:4.5,location:"Old Delhi",time:"25-35 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop"},
-    {id:2,name:"Bombay Chaiwala",cuisine:"Cafe",category:"street-food",rating:4.3,location:"Connaught Place",time:"20-30 min",deliveryFee:15,image:"https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop"},
-    {id:3,name:"Gangaram Chaat Bhandar",cuisine:"Street Food",category:"street-food",rating:4.8,location:"Chandni Chowk",time:"30-40 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop"},
-    {id:4,name:"Pind Balluchi",cuisine:"Punjabi",category:"punjabi",rating:4.6,location:"Rajouri Garden",time:"35-45 min",deliveryFee:30,image:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=250&fit=crop"},
-    {id:5,name:"Bikanervala",cuisine:"Sweets",category:"punjabi",rating:4.4,location:"Karol Bagh",time:"25-35 min",deliveryFee:25,image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=250&fit=crop"},
-    {id:6,name:"Sagar Ratna",cuisine:"South Indian",category:"south-indian",rating:4.5,location:"Lajpat Nagar",time:"20-30 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop"},
-    {id:7,name:"Mamagoto",cuisine:"Chinese",category:"chinese",rating:4.7,location:"Hauz Khas",time:"30-40 min",deliveryFee:40,image:"https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=250&fit=crop"}
+    {id:1,name:"Sharma Ji Ki Kachori",cuisine:"Street Food",category:"street-food",rating:4.5,location:"Old Delhi",time:"25-35 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1625937287334-9c5bd9e59003?w=400&h=250&fit=crop",
+     foods:["Kachori","Samosa","Jalebi","Pyaz Kachori","Dal Kachori"]},
+    {id:2,name:"Bombay Chaiwala",cuisine:"Cafe",category:"street-food",rating:4.3,location:"Connaught Place",time:"20-30 min",deliveryFee:15,image:"https://images.unsplash.com/photo-1567925084989-9d6f2f5f8b4a?w=400&h=250&fit=crop",
+     foods:["Chai","Vada Pav","Pav Bhaji","Bun Maska","Cutting Chai"]},
+    {id:3,name:"Gangaram Chaat Bhandar",cuisine:"Street Food",category:"street-food",rating:4.8,location:"Chandni Chowk",time:"30-40 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1606491956689-2ea11e9e9f8c?w=400&h=250&fit=crop",
+     foods:["Aloo Tikki","Papdi Chaat","Gol Gappe","Dahi Bhalla","Chole Bhature"]},
+    {id:4,name:"Pind Balluchi",cuisine:"Punjabi",category:"punjabi",rating:4.6,location:"Rajouri Garden",time:"35-45 min",deliveryFee:30,image:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&h=250&fit=crop",
+     foods:["Butter Chicken","Dal Makhani","Naan","Paneer Tikka","Gulab Jamun"]},
+    {id:5,name:"Bikanervala",cuisine:"Sweets",category:"punjabi",rating:4.4,location:"Karol Bagh",time:"25-35 min",deliveryFee:25,image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=250&fit=crop",
+     foods:["Raj Kachori","Kaju Katli","Ghevar","Soan Papdi","Samosa"]},
+    {id:6,name:"Sagar Ratna",cuisine:"South Indian",category:"south-indian",rating:4.5,location:"Lajpat Nagar",time:"20-30 min",deliveryFee:20,image:"https://images.unsplash.com/photo-1630384060421-cf20c0e2e8c6?w=400&h=250&fit=crop",
+     foods:["Masala Dosa","Idli","Uttapam","Vada","Filter Coffee"]},
+    {id:7,name:"Mamagoto",cuisine:"Chinese",category:"chinese",rating:4.7,location:"Hauz Khas",time:"30-40 min",deliveryFee:40,image:"https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=400&h=250&fit=crop",
+     foods:["Dimsums","Hakka Noodles","Fried Rice","Spring Rolls","Manchurian"]}
 ];
+
 const categories = ["all","street-food","punjabi","south-indian","chinese"];
 const categoryNames = {"all":"All","street-food":"Street Food","punjabi":"Punjabi","south-indian":"South Indian","chinese":"Chinese"};
 let currentFilter = "all";
-function displayRestaurants() {
+let currentSearchTerm = "";
+let currentSearchType = "both";
+
+// Search restaurants by name or food
+function searchRestaurants() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    currentSearchTerm = searchTerm;
+    
+    // Get selected search type
+    const selectedType = document.querySelector('input[name="searchType"]:checked');
+    if(selectedType) currentSearchType = selectedType.value;
+    
+    let filtered = [...restaurants];
+    
+    // Apply search filter
+    if(currentSearchTerm !== "") {
+        if(currentSearchType === "restaurant") {
+            filtered = filtered.filter(r => r.name.toLowerCase().includes(currentSearchTerm));
+        } else if(currentSearchType === "food") {
+            filtered = filtered.filter(r => 
+                r.foods.some(food => food.toLowerCase().includes(currentSearchTerm)) ||
+                r.cuisine.toLowerCase().includes(currentSearchTerm)
+            );
+        } else {
+            // Both - search in name, cuisine, and foods
+            filtered = filtered.filter(r => 
+                r.name.toLowerCase().includes(currentSearchTerm) ||
+                r.cuisine.toLowerCase().includes(currentSearchTerm) ||
+                r.foods.some(food => food.toLowerCase().includes(currentSearchTerm))
+            );
+        }
+    }
+    
+    // Apply category filter
+    if(currentFilter !== "all") {
+        filtered = filtered.filter(r => r.category === currentFilter);
+    }
+    
+    displayRestaurants(filtered);
+    
+    // Show results count
+    const countDiv = document.getElementById('resultsCount');
+    if(currentSearchTerm) {
+        countDiv.innerHTML = `Found ${filtered.length} restaurant(s) matching "${currentSearchTerm}"`;
+    } else {
+        countDiv.innerHTML = `${filtered.length} restaurants available`;
+    }
+}
+
+function displayRestaurants(restaurantsToShow) {
     const grid = document.getElementById('restaurantsGrid');
-    let filtered = restaurants;
-    if(currentFilter !== "all") filtered = restaurants.filter(r => r.category === currentFilter);
-    grid.innerHTML = filtered.map(r => `
+    
+    if(restaurantsToShow.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results">
+                <h3>😕 No restaurants found</h3>
+                <p>Try searching for "Pizza", "Biryani", "Dosa", or "Chai"</p>
+                <button onclick="clearSearch()" style="margin-top:15px;padding:10px 20px;background:#d95c2b;color:white;border:none;border-radius:20px;cursor:pointer;">Clear Search</button>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = restaurantsToShow.map(r => `
         <div class="restaurant-card" onclick="window.location.href='menu.html?id=${r.id}'">
             <img src="${r.image}" onerror="this.src='https://via.placeholder.com/400x150?text=Restaurant'">
             <h3>${r.name}</h3>
             <p>⭐ ${r.rating} | ${r.cuisine}</p>
             <p>📍 ${r.location}</p>
             <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
+            <p style="color:#d95c2b;font-size:12px;margin-top:5px;">🍽️ ${r.foods.slice(0,3).join(", ")}</p>
         </div>
     `).join('');
 }
+
 function filterRestaurants(category, btn) {
     currentFilter = category;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
-    displayRestaurants();
+    searchRestaurants(); // Re-apply search with new filter
 }
-function searchRestaurants() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = restaurants.filter(r => r.name.toLowerCase().includes(term) || r.cuisine.toLowerCase().includes(term));
-    const grid = document.getElementById('restaurantsGrid');
-    grid.innerHTML = filtered.map(r => `
-        <div class="restaurant-card" onclick="window.location.href='menu.html?id=${r.id}'">
-            <img src="${r.image}">
-            <h3>${r.name}</h3>
-            <p>⭐ ${r.rating} | ${r.cuisine}</p>
-            <p>📍 ${r.location}</p>
-            <p>⏱️ ${r.time} | ₹${r.deliveryFee}</p>
-        </div>
-    `).join('');
+
+function clearSearch() {
+    document.getElementById('searchInput').value = "";
+    currentSearchTerm = "";
+    searchRestaurants();
 }
+
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const total = cart.reduce((s,i) => s + i.quantity, 0);
     const span = document.getElementById('cartCount');
     if(span) span.innerText = total;
 }
+
+// Create filter buttons
 const filtersDiv = document.getElementById('filters');
 filtersDiv.innerHTML = categories.map(cat => 
     `<button class="filter-btn ${cat === 'all' ? 'active' : ''}" data-filter="${cat}" onclick="filterRestaurants('${cat}', this)">${categoryNames[cat]}</button>`
 ).join('');
-displayRestaurants();
+
+// Initial load
+searchRestaurants();
 updateCartCount();
+
+// Enter key search
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if(e.key === 'Enter') searchRestaurants();
+});
 </script>
 </body>
 </html>
